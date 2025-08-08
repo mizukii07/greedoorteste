@@ -1,0 +1,710 @@
+Poderia me ajudar a testar um código no github? Eu posso te mandar o código para vc ver
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GREEN DOOR RPG - Ficha Completa</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --verde-neon: #4efc97;
+      --verde-escuro: #0a2e1a;
+      --verde-meio: #1e4530;
+      --verde-claro: #3a9e5f;
+      --preto: #0a0a0a;
+      --branco: #e0f0e5;
+      --sombra: rgba(0, 255, 100, 0.3);
+      --destaque: #ffeb3b;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(rgba(10, 30, 20, 0.9), rgba(10, 30, 20, 0.9));
+      color: var(--branco);
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Menu Lateral */
+    .menu-lateral {
+      width: 250px;
+      background-color: var(--verde-escuro);
+      border-right: 2px solid var(--verde-neon);
+      padding: 20px;
+      position: fixed;
+      height: 100vh;
+    }
+
+    .logo {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .logo img {
+      max-width: 180px;
+      filter: drop-shadow(0 0 5px var(--verde-neon));
+    }
+
+    .menu-item {
+      padding: 12px 15px;
+      margin: 8px 0;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-family: 'Orbitron', sans-serif;
+    }
+
+    .menu-item:hover {
+      background-color: var(--verde-meio);
+    }
+
+    .menu-item.ativo {
+      background-color: var(--verde-claro);
+      color: var(--preto);
+      font-weight: bold;
+    }
+
+    /* Conteúdo Principal */
+    .conteudo {
+      margin-left: 250px;
+      flex: 1;
+      padding: 30px;
+    }
+
+    /* Ficha Container */
+    .ficha-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: rgba(10, 40, 20, 0.8);
+      border-radius: 10px;
+      padding: 25px;
+      box-shadow: 0 0 30px var(--sombra);
+      border: 1px solid var(--verde-neon);
+    }
+
+    h1, h2, h3 {
+      font-family: 'Orbitron', sans-serif;
+      color: var(--verde-neon);
+      margin-bottom: 15px;
+    }
+
+    /* Informações do Jogador */
+    .info-jogador {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .dados-jogador {
+      flex: 1;
+      min-width: 250px;
+    }
+
+    .avatar {
+      width: 150px;
+      height: 150px;
+      border-radius: 8px;
+      background: rgba(30, 70, 40, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      border: 2px dashed var(--verde-neon);
+    }
+
+    .avatar img {
+      max-width: 100%;
+      max-height: 100%;
+    }
+
+    label {
+      display: block;
+      margin: 10px 0 5px;
+      font-weight: bold;
+      color: var(--verde-neon);
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 8px;
+      background: rgba(30, 70, 40, 0.5);
+      border: 1px solid var(--verde-neon);
+      border-radius: 4px;
+      color: var(--branco);
+    }
+
+    /* Fôlego */
+    .folego-container {
+      margin-top: 15px;
+    }
+
+    .barra-folego {
+      height: 10px;
+      background: var(--verde-escuro);
+      border-radius: 5px;
+      margin-top: 5px;
+      overflow: hidden;
+    }
+
+    .barra-folego-inner {
+      height: 100%;
+      background: var(--verde-neon);
+      width: 100%;
+    }
+
+    /* Atributos e Perícias */
+    .grid-atributos {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .card-atributo {
+      background: rgba(20, 50, 30, 0.6);
+      border-radius: 8px;
+      padding: 15px;
+      border-left: 4px solid var(--verde-neon);
+    }
+
+    .atributo-input {
+      width: 60px;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+
+    .pericia-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 8px 0;
+      padding: 5px;
+      background: rgba(30, 60, 40, 0.3);
+      border-radius: 4px;
+    }
+
+    .pericia-nome {
+      flex: 1;
+    }
+
+    .pericia-manual {
+      width: 40px;
+      text-align: center;
+    }
+
+    .pericia-total {
+      min-width: 30px;
+      text-align: center;
+      font-weight: bold;
+      color: var(--verde-neon);
+    }
+
+    /* Botões */
+    .btn-container {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      background: var(--verde-neon);
+      color: var(--verde-escuro);
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.3s;
+    }
+
+    .btn:hover {
+      background: var(--branco);
+      transform: translateY(-2px);
+    }
+
+    /* Responsividade */
+    @media (max-width: 768px) {
+      .menu-lateral {
+        width: 100%;
+        position: relative;
+        height: auto;
+      }
+      
+      .conteudo {
+        margin-left: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Menu Lateral -->
+  <div class="menu-lateral">
+    <div class="logo">
+      <img src="https://media.discordapp.net/attachments/1402279926987493437/1402435120287187066/31_Sem_Titulo2_20250719171917.png" alt="Green Door Logo">
+    </div>
+    
+    <div class="menu-item ativo" onclick="mostrarSecao('ficha')">Minha Ficha</div>
+    <div class="menu-item" onclick="mostrarSecao('ranking')">Rankings</div>
+    <div class="menu-item" onclick="mostrarSecao('leilao')">Leilão</div>
+    <div class="menu-item" onclick="logout()">Sair</div>
+  </div>
+
+  <!-- Conteúdo Principal -->
+  <div class="conteudo">
+    <!-- Seção da Ficha -->
+    <div id="secao-ficha">
+      <div class="ficha-container">
+        <h1>FICHA DO JOGADOR</h1>
+        
+        <!-- Informações Básicas -->
+        <div class="info-jogador">
+          <div class="dados-jogador">
+            <label for="nome">Nome do Personagem</label>
+            <input type="text" id="nome" placeholder="Ex: Rin Itoshi">
+            
+            <label for="idade">Idade</label>
+            <input type="number" id="idade" min="13" max="50" value="18">
+            
+            <label for="classe">Classe</label>
+            <select id="classe">
+              <option value="">Selecione sua classe...</option>
+              <option value="padeiro">O Padeiro</option>
+              <option value="soberano">Soberano dos Escarnecedores</option>
+              <!-- [Todas as outras classes abaixo] -->
+              <option value="ala">Ala Completo</option>
+              <option value="cemiterio">Cemitério de Talentos</option>
+              <option value="devorador">O Devorador de Ás</option>
+              <option value="trivelinha">Trivelinha</option>
+              <option value="entropia">Entropia Controlada</option>
+              <option value="matador">O Matador de Ginga</option>
+              <option value="duelista">O Duelista</option>
+              <option value="as">Ás Dominador</option>
+              <option value="cacador">O Caçador de Gols</option>
+              <option value="instinto">Institivo</option>
+              <option value="principe">Príncipe do Drible</option>
+              <option value="saltador">Atacante Saltador</option>
+              <option value="playmaker">Playmaker</option>
+              <option value="especialista">O Especialista Espacial</option>
+              <option value="precisao">Caçador de Precisão</option>
+              <option value="vigia">Vigia</option>
+              <option value="atacante">O Atacante Completo</option>
+              <option value="driblador">O Driblador</option>
+              <option value="magico">Mágico</option>
+              <option value="maestro">Maestro Magistral</option>
+              <option value="estrategista">O Estrategista Prodígio</option>
+              <option value="ninja">O Ninja</option>
+              <option value="controlador">O Atacante Controlador</option>
+              <option value="planetario">O Planetário</option>
+              <option value="breakdance">Breakdance</option>
+              <option value="velocista">Velocista</option>
+              <option value="corvo">Corvo</option>
+              <option value="goleiro">O Goleiro</option>
+              <option value="genio">O Gênio Indomável</option>
+              <option value="cachorro">O Cachorro Louco</option>
+              <option value="molusco">Molusco Malicioso</option>
+              <option value="elmaestro">El Maestro</option>
+              <option value="dominador">Dominador Dimensional</option>
+              <option value="clinico">Finalizador Clínico</option>
+              <option value="imperador">O Imperador</option>
+              <option value="defensor">O Defensor Espacial</option>
+              <option value="relampago">Relâmpago Roxo</option>
+              <option value="gaviao">Gavião</option>
+              <option value="multifuncoes">O Multi-Funções</option>
+              <option value="camisa9">Camisa 9</option>
+              <option value="vilao">Vilão do Campo</option>
+              <option value="trickster">Trickster</option>
+              <option value="general">General Ás</option>
+              <option value="estamina">Louco por Estamina</option>
+              <option value="paladino">O Paladino dos Céus</option>
+              <option value="ceifador">Ceifador Sombrio</option>
+              <option value="arruaceiro">Arruaceiro</option>
+              <option value="passador">O Passador Glacial</option>
+            </select>
+          </div>
+          
+          <div class="dados-jogador">
+            <label for="posicao">Posição</label>
+            <select id="posicao">
+              <option value="goleiro">Goleiro</option>
+              <option value="zagueiro">Zagueiro</option>
+              <option value="lateral">Lateral</option>
+              <option value="meia">Meia</option>
+              <option value="atacante">Atacante</option>
+            </select>
+            
+            <label for="altura">Altura (m)</label>
+            <input type="number" id="altura" min="1.50" max="2.05" step="0.01" value="1.75">
+            
+            <label for="peso">Peso (kg)</label>
+            <input type="number" id="peso" min="50" max="100" step="1" value="70">
+          </div>
+          
+          <div class="dados-jogador">
+            <label for="perna">Perna Dominante</label>
+            <select id="perna">
+              <option value="direita">Direita</option>
+              <option value="esquerda">Esquerda</option>
+              <option value="ambidestro">Ambidestro</option>
+            </select>
+            
+            <label for="dom">Dom Natural</label>
+            <select id="dom">
+              <option value="nenhum">Nenhum</option>
+              <option value="genio">Gênio (+6 perícias)</option>
+              <option value="prodigo">Prodígio (+6 atributos)</option>
+            </select>
+            
+            <div class="folego-container">
+              <label>Fôlego (Atual/Total)</label>
+              <div style="display: flex; align-items: center; gap: 5px;">
+                <input type="number" id="folego-atual" min="0" value="10" style="width: 60px;">
+                <span>/</span>
+                <input type="number" id="folego-total" min="1" value="10" style="width: 60px;">
+              </div>
+              <div class="barra-folego">
+                <div class="barra-folego-inner" id="barra-folego" style="width: 100%;"></div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="avatar">
+            <img id="avatar-img" src="" alt="Avatar" style="display: none;">
+            <span>Sem imagem</span>
+          </div>
+        </div>
+        
+        <!-- Upload de Avatar -->
+        <div style="text-align: center; margin-bottom: 20px;">
+          <input type="file" id="avatar-input" accept="image/*">
+        </div>
+
+        <!-- Atributos e Perícias -->
+        <h2>ATRIBUTOS E PERÍCIAS</h2>
+        <div class="grid-atributos">
+          <!-- POTÊNCIA -->
+          <div class="card-atributo">
+            <h3>💪 POTÊNCIA</h3>
+            <input type="number" id="potencia" class="atributo-input" min="-50" max="50" value="0">
+            
+            <div class="pericia-item">
+              <span class="pericia-nome">Corpo a Corpo</span>
+              <input type="number" class="pericia-manual" data-pericia="corpo" min="-10" max="5" value="0">
+              <span class="pericia-total" data-pericia="corpo">0</span>
+            </div>
+            
+            <div class="pericia-item">
+              <span class="pericia-nome">Cabeceio</span>
+              <input type="number" class="pericia-manual" data-pericia="cabeceio" min="-10" max="5" value="0">
+              <span class="pericia-total" data-pericia="cabeceio">0</span>
+            </div>
+            
+            <div class="pericia-item">
+              <span class="pericia-nome">Chute</span>
+              <input type="number" class="pericia-manual" data-pericia="chute" min="-10" max="5" value="0">
+              <span class="pericia-total" data-pericia="chute">0</span>
+            </div>
+          </div>
+          
+          <!-- TÉCNICA -->
+          <div class="card-atributo">
+            <h3>⚽ TÉCNICA</h3>
+            <input type="number" id="tecnica" class="atributo-input" min="-50" max="50" value="0">
+            
+            <div class="pericia-item">
+              <span class="pericia-nome">Passe</span>
+              <input type="number" class="pericia-manual" data-pericia="passe" min="-10" max="5" value="0">
+              <span class="pericia-total" data-pericia="passe">0</span>
+            </div>
+            
+            <div class="pericia-item">
+              <span class="pericia-nome">Drible/Finta</span>
+              <input type="number" class="pericia-manual" data-pericia="drible" min="-10" max="5" value="0">
+              <span class="pericia-total" data-pericia="drible">0</span>
+            </div>
+            
+            <div class="pericia-item">
+              <span class="pericia-nome">Domínio</span>
+              <input type="number" class="pericia-manual" data-pericia="dominio" min="-10" max="5" value="0">
+              <span class="pericia-total" data-pericia="dominio">0</span>
+            </div>
+            
+            <div class="pericia-item">
+              <span class="pericia-nome">Pontaria</span>
+              <input type="number" class="pericia-manual" data-pericia="pontaria" min="-10" max="5" value="0">
+              <span class="pericia-total" data-pericia="pontaria">0</span>
+            </div>
+            
+            <div class="pericia-item">
+              <span class="pericia-nome">Roubo de Bola</span>
+              <input type="number" class="pericia-manual" data-pericia="roubo" min="-10" max="5" value="0">
+              <span class="pericia-total" data-pericia="roubo">0</span>
+            </div>
+          </div>
+          
+          <!-- VELOCIDADE -->
+          <div class="card-atributo">
+            <h3>🏃 VELOCIDADE</h3>
+            <input type="number" id="velocidade" class="atributo-input" min="-50" max="50" value="0">
+            
+            <div class="pericia-item">
+              <span class="pericia-nome">Corrida Longa Distância</span>
+              <input type="number" class="pericia-manual" data-pericia="corrida" min="-10" max="5" value="0">
+              <span class="pericia-total" data-pericia="corrida">0</span>
+            </div>
+            
+            <div class="pericia-item">
+              <span class="pericia-nome">Explosão</span>
+              <input type="number" class="pericia-manual" data-pericia="explosao" min="-10" max="5" value="0">
+              <span class="pericia-total" data-pericia="explosao">0</span>
+            </div>
+          </div>
+          
+          <!-- AGILIDADE -->
+          <div class="card-atributo">
+            <h3>🥋 AGILIDADE</h3>
+            <input type="number" id="agilidade" class="atributo-input" min="-50" max="50" value="0">
+            
+            <div class="pericia-item">
+              <span class="pericia-nome">Reflexos</span>
+              <input type="number" class="pericia-manual" data-pericia="reflexos" min="-10" max="5" value="0">
+              <span class="pericia-total" data-pericia="reflexos">0</span>
+            </div>
+            
+            <div class="pericia-item">
+              <span class="pericia-nome">Defesa</span>
+              <input type="number" class="pericia-manual" data-pericia="defesa" min="-10" max="5" value="0">
+              <span class="pericia-total" data-pericia="defesa">0</span>
+            </div>
+            
+            <div class="pericia-item">
+              <span class="pericia-nome">Furtividade</span>
+              <input type="number" class="pericia-manual" data-pericia="furtividade" min="-10" max="5" value="0">
+              <span class="pericia-total" data-pericia="furtividade">0</span>
+            </div>
+            
+            <div class="pericia-item">
+              <span class="pericia-nome">Acrobacia</span>
+              <input type="number" class="pericia-manual" data-pericia="acrobacia" min="-10" max="5" value="0">
+              <span class="pericia-total" data-pericia="acrobacia">0</span>
+            </div>
+          </div>
+          
+          <!-- EGO -->
+          <div class="card-atributo">
+            <h3>💎 EGO</h3>
+            <input type="number" id="ego" class="atributo-input" min="-50" max="50" value="0">
+            
+            <div class="pericia-item">
+              <span class="pericia-nome">Intimidação</span>
+              <input type="number" class="pericia-manual" data-pericia="intimidacao" min="-10" max="5" value="0">
+              <span class="pericia-total" data-pericia="intimidacao">0</span>
+            </div>
+            
+            <div class="pericia-item">
+              <span class="pericia-nome">Presença</span>
+              <input type="number" class="pericia-manual" data-pericia="presenca" min="-10" max="5" value="0">
+              <span class="pericia-total" data-pericia="presenca">0</span>
+            </div>
+            
+            <div class="pericia-item">
+              <span class="pericia-nome">Enganação</span>
+              <input type="number" class="pericia-manual" data-pericia="enganacao" min="-10" max="5" value="0">
+              <span class="pericia-total" data-pericia="enganacao">0</span>
+            </div>
+            
+            <div class="pericia-item">
+              <span class="pericia-nome">Diplomacia</span>
+              <input type="number" class="pericia-manual" data-pericia="diplomacia" min="-10" max="5" value="0">
+              <span class="pericia-total" data-pericia="diplomacia">0</span>
+            </div>
+            
+            <div class="pericia-item">
+              <span class="pericia-nome">Intuição</span>
+              <input type="number" class="pericia-manual" data-pericia="intuicao" min="-10" max="5" value="0">
+              <span class="pericia-total" data-pericia="intuicao">0</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Habilidades e Botões -->
+        <div style="margin-top: 30px;">
+          <h3>HABILIDADES ESPECIAIS</h3>
+          <textarea id="habilidades" style="width: 100%; min-height: 100px;" placeholder="Descreva as habilidades especiais do seu personagem..."></textarea>
+        </div>
+        
+        <div class="btn-container">
+          <button class="btn" onclick="calcularPericias()">CALCULAR PERÍCIAS</button>
+          <button class="btn" onclick="salvarFicha()">SALVAR FICHA</button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- [Outras seções...] -->
+  </div>
+
+  <script>
+    // Firebase Configuration
+    const firebaseConfig = {
+      apiKey: "SUA_API_KEY",
+      authDomain: "SEU_PROJETO.firebaseapp.com",
+      projectId: "SEU_PROJETO",
+      storageBucket: "SEU_PROJETO.appspot.com",
+      messagingSenderId: "SEU_SENDER_ID",
+      appId: "SEU_APP_ID"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    // Tabelas de bônus de altura/peso (COMPLETAS)
+    const bonusAltura = {
+      '1.50-1.55': { drible: 3, explosao: 2, reflexos: 2, cabeceio: -3, intimidacao: -2, defesa: -2 },
+      '1.56-1.60': { drible: 2, explosao: 2, reflexos: 2, cabeceio: -3, intimidacao: -2, defesa: -1 },
+      '1.61-1.65': { drible: 2, explosao: 1, reflexos: 2, cabeceio: -2, intimidacao: -1, defesa: -1 },
+      '1.66-1.70': { drible: 2, explosao: 1, reflexos: 1, cabeceio: -2, defesa: -1 },
+      '1.71-1.75': { drible: 1, reflexos: 1, cabeceio: -1 },
+      '1.76-1.80': {},
+      '1.81-1.85': { cabeceio: 1, intimidacao: 1, defesa: 1, explosao: -1 },
+      '1.86-1.90': { cabeceio: 2, intimidacao: 1, defesa: 2, explosao: -2 },
+      '1.91-1.95': { cabeceio: 2, intimidacao: 2, defesa: 2, explosao: -2, drible: -1 },
+      '1.96-2.00': { cabeceio: 3, intimidacao: 2, defesa: 3, explosao: -3, drible: -2, reflexos: -1 },
+      '2.01-2.05': { cabeceio: 3, intimidacao: 3, defesa: 4, explosao: -4, drible: -2, reflexos: -2 }
+    };
+
+    const bonusPeso = {
+      '50-55': { explosao: 3, acrobacia: 2, furtividade: 2, reflexos: 1, corpo: -3, intimidacao: -2, defesa: -2 },
+      '56-60': { explosao: 2, acrobacia: 2, furtividade: 1, reflexos: 1, corpo: -3, intimidacao: -2, defesa: -1 },
+      '61-65': { explosao: 2, acrobacia: 1, furtividade: 1, reflexos: 1, corpo: -2, intimidacao: -1 },
+      '66-70': { explosao: 2, acrobacia: 1, reflexos: 1, corpo: -2 },
+      '71-75': {},
+      '76-80': { corpo: 1, chute: 1, defesa: 1, explosao: -1 },
+      '81-85': { corpo: 2, chute: 1, defesa: 1, explosao: -2, reflexos: -1 },
+      '86-90': { corpo: 2, chute: 2, defesa: 2, explosao: -2, reflexos: -1 },
+      '91-95': { corpo: 3, chute: 2, defesa: 3, explosao: -3, reflexos: -2 },
+      '96-100': { corpo: 3, chute: 3, defesa: 4, explosao: -4, reflexos: -2, drible: -1 }
+    };
+
+    // Função para identificar intervalo
+    function getBonus(value, table) {
+      const numValue = Number(value);
+      if (isNaN(numValue)) return {};
+      
+      for (const range in table) {
+        const [minStr, maxStr] = range.split('-');
+        const min = Number(minStr);
+        const max = Number(maxStr);
+        
+        if (numValue >= min && numValue <= max) {
+          return table[range] || {};
+        }
+      }
+      return {};
+    }
+
+    // Atualizar barra de fôlego
+    function atualizarBarraFolego() {
+      const atual = parseInt(document.getElementById('folego-atual').value) || 0;
+      const total = parseInt(document.getElementById('folego-total').value) || 1;
+      const porcentagem = Math.min(100, (atual / total) * 100);
+      document.getElementById('barra-folego').style.width = `${porcentagem}%`;
+    }
+
+    // Calcular todas as perícias
+    function calcularPericias() {
+      const altura = parseFloat(document.getElementById('altura').value) || 1.75;
+      const peso = parseInt(document.getElementById('peso').value) || 70;
+      const perna = document.getElementById('perna').value;
+      const dom = document.getElementById('dom').value;
+
+      const bonusA = getBonus(altura, bonusAltura);
+      const bonusP = getBonus(peso, bonusPeso);
+
+      document.querySelectorAll('.pericia-item').forEach(item => {
+        const periciaId = item.querySelector('.pericia-manual').dataset.pericia;
+        const card = item.closest('.card-atributo');
+        const atributoId = card.querySelector('.atributo-input').id;
+        const valorAtributo = parseInt(document.getElementById(atributoId).value) || 0;
+
+        // Cálculo base (metade do atributo)
+        let valor = Math.floor(valorAtributo / 2);
+
+        // Aplicar bônus de altura/peso
+        if (bonusA[periciaId]) valor += bonusA[periciaId];
+        if (bonusP[periciaId]) valor += bonusP[periciaId];
+
+        // Aplicar ambidestria
+        if (perna === 'ambidestro' && ['passe','drible','dominio','pontaria','roubo'].includes(periciaId)) {
+          valor += 5;
+        }
+
+        // Aplicar dom natural (Gênio)
+        if (dom === 'genio') {
+          valor += 6;
+        }
+
+        // Atualizar total
+        const pontosManuais = parseInt(item.querySelector('.pericia-manual').value) || 0;
+        item.querySelector('.pericia-total').textContent = valor + pontosManuais;
+      });
+
+      // Atualizar deslocamento (10 + velocidade)
+      const velocidade = parseInt(document.getElementById('velocidade').value) || 0;
+      document.getElementById('deslocamento').value = 10 + velocidade;
+    }
+
+    // Upload de avatar
+    document.getElementById('avatar-input').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+          const img = document.getElementById('avatar-img');
+          img.src = event.target.result;
+          img.style.display = 'block';
+          document.querySelector('.avatar span').style.display = 'none';
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // Event listeners para cálculos automáticos
+    document.getElementById('altura').addEventListener('change', calcularPericias);
+    document.getElementById('peso').addEventListener('change', calcularPericias);
+    document.getElementById('perna').addEventListener('change', calcularPericias);
+    document.getElementById('dom').addEventListener('change', calcularPericias);
+    document.getElementById('folego-atual').addEventListener('input', atualizarBarraFolego);
+    document.getElementById('folego-total').addEventListener('input', atualizarBarraFolego);
+
+    // [Funções do Firebase (login, logout, salvarFicha, etc.)]
+    function mostrarSecao(secao) {
+      // Implemente conforme necessário
+    }
+
+    function salvarFicha() {
+      // Implemente a lógica de salvamento
+      alert('Ficha salva com sucesso!');
+    }
+
+    function logout() {
+      // Implemente o logout
+    }
+
+    // Inicialização
+    document.addEventListener('DOMContentLoaded', function() {
+      atualizarBarraFolego();
+      calcularPericias();
+    });
+  </script>
+</body>
+</html>
