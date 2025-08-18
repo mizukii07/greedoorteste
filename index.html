@@ -9,11 +9,13 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <!-- Loader inicial -->
   <div class="loader" id="loader">
     <div class="spinner"></div>
     <p>Carregando o universo do Green Door RPG...</p>
   </div>
 
+  <!-- Cabeçalho Fixo -->
   <header>
     <div class="logo-container">
       <img src="https://raw.githubusercontent.com/mizukii07/green-door-assets/refs/heads/main/33242792-c30e-49d9-98f5-ee66dc015dc4.jpg" alt="Green Door Logo" class="logo" id="header-logo">
@@ -25,7 +27,7 @@
         <li><a href="#" onclick="mostrarSecao('home')" class="ativo">Home</a></li>
         <li><a href="#" onclick="mostrarSecao('ficha')">Ficha</a></li>
         <li><a href="#" onclick="mostrarSecao('ranking')">Rankings</a></li>
-        <li><a href="#" onclick="mostrarSecao('leilao')">Leilão</a></li>
+        <li><a href="#" onclick="mostrarSecao('leilao')">Leilão</极狐li>
         <li><a href="#" onclick="mostrarSecao('mestre')">Painel do Mestre</a></li>
       </ul>
     </nav>
@@ -40,7 +42,9 @@
     </div>
   </header>
 
+  <!-- Conteúdo Principal -->
   <div class="conteudo">
+    <!-- Página Inicial -->
     <div id="secao-home">
       <div class="home-container">
         <h1>GREEN DOOR RPG</h1>
@@ -80,8 +84,10 @@
       </div>
     </div>
     
+    <!-- Seção da Ficha -->
     <div id="secao-ficha" style="display: none;">
       <div class="ficha-container">
+        <!-- Seletor de Fichas -->
         <div id="seletor-fichas" style="margin-bottom: 20px; display: none;">
           <label for="fichas-usuario"><i class="fas fa-scroll"></i> Selecione sua ficha:</label>
           <select id="fichas-usuario" onchange="carregarFichaSelecionada()"></select>
@@ -92,6 +98,7 @@
         
         <h1><i class="fas fa-scroll"></i> FICHA DO JOGADOR</h1>
         
+        <!-- Informações Básicas -->
         <div class="info-jogador">
           <div class="dados-jogador">
             <label for="nickname"><i class="fas fa-user-tag"></i> Apelido do Jogador</label>
@@ -105,24 +112,101 @@
             
             <label for="classe"><i class="fas fa-magic"></i> Classe</label>
             <select id="classe">
-              <!-- Opções de classe mantidas -->
+              <option value="">Selecione sua classe...</option>
+              <option value="padeiro">O Padeiro</option>
+              <option value="soberano">Soberano dos Escarnecedores</option>
+              <option value="ala">Ala Completo</option>
+              <option value="cemiterio">Cemitério de Talentos</option>
+              <option value="devorador">O Devorador de Ás</option>
+              <option value="trivelinha">Trivelinha</option>
+              <option value="entropia">Entropia Controlada</option>
+              <option value="matador">O Matador de Ginga</option>
+              <option value="duelista">O Duelista</option>
+              <option value="as">Ás Dominador</option>
+              <option value="cacador">O Caçador de Gols</option>
+              <option value="instinto">Institivo</option>
+              <option value="principe">Príncipe do Drible</option>
+              <option value="saltador">Atacante Saltador</option>
+              <option value="playmaker">Playmaker</option>
+              <option value="especialista">O Especialista Espacial</option>
+              <option value="precisao">Caçador de Precisão</option>
+              <option value="vigia">Vigia</option>
+              <option value="atacante">O Atacante Completo</option>
+              <option value="driblador">O Driblador</option>
+              <option value="magico">Mágico</option>
+              <option value="maestro">Maestro Magistral</option>
+              <option value="estrategista">O Estrategista Prodígio</option>
+              <option value="ninja">O Ninja</option>
+              <option value="controlador">O Atacante Controlador</option>
+              <option value="planetario">O Planetário</option>
+              <option value="breakdance">Breakdance</option>
+              <option value="velocista">Velocista</option>
+              <option value="corvo">Corvo</option>
+              <option value="goleiro">O Goleiro</option>
+              <option value="genio">O Gênio Indomável</option>
+              <option value="cachorro">O Cachorro Louco</option>
+              <option value="molusco">Molusco Malicioso</option>
+              <option value="elmaestro">El Maestro</option>
+              <option value="dominador">Dominador Dimensional</option>
+              <option value="clinico">Finalizador Clínico</option>
+              <option value="imperador">O Imperador</option>
+              <option value="defensor">O Defensor Espacial</option>
+              <option value="relampago">Relâmpago Roxo</option>
+              <option value="gaviao">Gavião</option>
+              <option value="multifuncoes">O Multi-Funções</option>
+              <option value="camisa9">Camisa 9</option>
+              <option value="vilao">Vilão do Campo</option>
+              <option value="trickster">Trickster</option>
+              <option value="general">General Ás</option>
+              <option value="estamina">Louco por Estamina</option>
+              <option value="paladino">O Paladino dos Céus</option>
+              <option value="ceifador">Ceifador Sombrio</option>
+              <option value="arruaceiro">Arruaceiro</option>
+              <option value="passador">O Passador Glacial</option>
             </select>
             
             <label for="time"><i class="fas fa-users"></i> Time</label>
             <select id="time">
-              <!-- Opções de time mantidas -->
+              <option value="">Selecione seu time...</option>
+              <option value="v1">Time V1</option>
+              <option value="w1">Time W1</option>
+              <option value="x1">Time X1</option>
+              <option value="y1">Time Y1</option>
+              <option value="z1">Time Z1</option>
+              <option value="v2">Time V2</option>
+              <option value="w2">Time W2</option>
+              <option value="x2">Time X2</option>
+              <option value="y2">Time Y2</option>
+              <option value="z2">Time Z2</option>
             </select>
           </div>
           
           <div class="dados-jogador">
             <label for="posicao"><i class="fas fa-map-marker-alt"></i> Posição Principal</label>
             <select id="posicao">
-              <!-- Opções de posição mantidas -->
+              <option value="goleiro">Goleiro</option>
+              <option value="zagueiro">Zagueiro</option>
+              <option value="lateral_direito">Lateral Direito</option>
+              <option value="lateral_esquerdo">Lateral Esquerdo</option>
+              <option value="volante">Volante</option>
+              <option value="meia_ofensivo">Meia Ofensivo</option>
+              <option value="ponta_direita">Ponta Direita</option>
+              <option value="ponta_esquerda">Ponta Esquerda</option>
+              <option value="centroavante">Centroavante</option>
             </select>
             
             <label for="posicao_secundaria"><i class="fas fa-map-marker-alt"></i> Posição Secundária</label>
-            <select id="posicao_secundaria">
-              <!-- Opções de posição mantidas -->
+            <select id="posicao_极狐secundaria">
+              <option value="nenhuma">Nenhuma</option>
+              <option value="goleiro">Goleiro</option>
+              <option value="zagueiro">Zagueiro</option>
+              <option value="lateral_direito">Lateral Direito</option>
+              <option value="lateral_esquerdo">Lateral Esquerdo</option>
+              <option value="volante">Volante</option>
+              <option value="meia_ofensivo">Meia Ofensivo</option>
+              <option value="ponta_direita">Ponta Direita</option>
+              <option value="ponta_esquerda">Ponta Esquerda</option>
+              <option value="centroavante">Centroavante</option>
             </select>
             
             <label for="altura"><i class="fas fa-arrows-alt-v"></i> Altura (m)</label>
@@ -135,12 +219,16 @@
           <div class="dados-jogador">
             <label for="perna"><i class="fas fa-walking"></i> Perna Dominante</label>
             <select id="perna">
-              <!-- Opções de perna mantidas -->
+              <option value="direita">Direita</option>
+              <option value="esquerda">Esquerda</option>
+              <option value="ambidestro">Ambidestro</option>
             </select>
             
             <label for="dom"><i class="fas fa-star"></i> Dom Natural</label>
             <select id="dom">
-              <!-- Opções de dom mantidas -->
+              <option value="nenhum">Nenhum</option>
+              <option value="genio">Gênio (+6 pontos em perícias)</option>
+              <option value="prodigo">Prodígio (+6 pontos em atributos)</option>
             </select>
             
             <div class="folego-container">
@@ -167,10 +255,30 @@
           </div>
         </div>
         
+        <!-- Estatísticas -->
         <div class="estatisticas-container">
-          <!-- Estatísticas mantidas -->
+          <div class="estatistica-item">
+            <span><i class="fas fa-futbol"></i> Gols</span>
+            <input type="number" id="gols" min="0" value="0" class="estatistica-valor">
+          </div>
+          
+          <div class="estatistica-item">
+            <span><i class="fas fa-shoe-prints"></i> Assistências</span>
+            <input type="number" id="assistencias" min="0" value="0" class="estatistica-valor">
+          </div>
+          
+          <div class="estatistica-item" id="sg-container" style="display:none;">
+            <span><i class="fas fa-shield-alt"></i> SG</span>
+            <input type="number" id="sg" min="0" value="0" class="estatistica-valor">
+          </div>
+          
+          <div class="estatistica-item">
+            <span><i class="fas fa-running"></i> Deslocamento</span>
+            <input type="number" id="deslocamento" min="0" value="10" class="estatistica-valor" readonly>
+          </div>
         </div>
         
+        <!-- Upload de Avatar -->
         <div style="text-align: center; margin-bottom: 20px;">
           <label for="avatar-input" class="btn">
             <i class="fas fa-upload"></i> Carregar Avatar
@@ -178,11 +286,155 @@
           <input type="file" id="avatar-input" accept="image/*" style="display: none;">
         </div>
 
+        <!-- Atributos e Perícias -->
         <h2><i class="fas fa-chart-bar"></i> ATRIBUTOS E PERÍCIAS</h2>
         <div class="grid-atributos">
-          <!-- Atributos e perícias mantidos -->
+          <!-- POTÊNCIA -->
+          <div class="card-atributo">
+            <h3><i class="fas fa-fist-raised"></i> POTÊNCIA</h3>
+            <input type="number" id="potencia" class="atributo-input" min="-100" max="100" value="0">
+            
+            <div class="pericia-item">
+              <span class="pericia-nome">Corpo a Corpo</span>
+              <input type="number" class="pericia-manual" data-pericia="corpo" min="-100" max="100" value="0">
+              <span class="pericia-total" data-pericia="corpo">0</span>
+            </div>
+            
+            <div class="pericia-item">
+              <span class="pericia-nome">Cabeceio</span>
+              <input type="number" class="pericia-manual" data-pericia="cabeceio" min="-100" max="100" value="0">
+              <span class="pericia-total" data-pericia="cabeceio">0</span>
+            </div>
+            
+            <div class="pericia-item">
+              <span class="pericia-nome">Chute</span>
+              <input type="number" class="pericia-manual" data-pericia="chute" min="-100" max="100" value="0">
+              <span class="pericia-total" data-pericia="chute">0</span>
+            </div>
+          </div>
+          
+          <!-- TÉCNICA -->
+          <div class="card-atributo">
+            <h3><i class="fas fa-futbol"></i> TÉCNICA</h3>
+            <input type="number" id="tecnica" class="atributo-input" min="-100" max="100" value="0">
+            
+            <div class="pericia-item">
+              <span class="pericia-nome">Passe</span>
+              <input type="number" class="pericia-manual" data-pericia="passe" min="-100" max="100" value="0">
+              <span class="pericia-total" data-pericia="passe">0</span>
+            </div>
+            
+            <div class="pericia-item">
+              <span class="pericia-nome">Drible/Finta</span>
+              <input type="number" class="pericia-manual" data-pericia="drible" min="-100" max="100" value="0">
+              <span class="pericia-total" data-pericia="drible">0</span>
+            </div>
+            
+            <div class="pericia-item">
+              <span class="pericia-nome">Domínio</span>
+              <input type="number" class="pericia-manual" data-pericia="dominio" min="-100" max="100" value="0">
+              <span class="pericia-total" data-pericia="dominio">0</span>
+            </div>
+            
+            <div class="pericia-item">
+              <span class="pericia-nome">Pontaria</span>
+              <input type="number" class="pericia-manual" data-pericia="pontaria" min="-100" max="100" value="0">
+              <span class="pericia-total" data-pericia="pontaria">0</span>
+            </div>
+            
+            <div class="pericia-item">
+              <span class="pericia-nome">Roubo de Bola</span>
+              <input type="number" class="pericia-manual" data-pericia="roubo" min="-100" max="100" value="0">
+              <span class="pericia-total" data-pericia="roubo">0</span>
+            </div>
+          </div>
+          
+          <!-- VELOCIDADE -->
+          <div class="card-atributo">
+            <h3><i class="fas fa-running"></i> VELOCIDADE</h3>
+            <input type="number" id="velocidade" class="atributo-input" min="-100" max="100" value="0">
+            
+            <div class="pericia-item">
+              <span class="pericia-nome">Corrida Longa Distância</span>
+              <input type="number" class="pericia-manual" data-pericia="corrida" min="-100" max="100" value="0">
+              <span class="pericia-total" data-pericia="corrida">0</span>
+            </div>
+            
+            <div class="pericia-item">
+              <span class="pericia-nome">Explosão</span>
+              <input type="number" class="pericia-manual" data-pericia="explosao" min="-100" max="100" value="0">
+              <span class="pericia-total" data-pericia="explosao">0</span>
+            </div>
+          </div>
+          
+          <!-- AGILIDADE -->
+          <div class="card-atributo">
+            <h3><i class="fas fa-user-ninja"></i> AGILIDADE</h3>
+            <input type="number" id="agilidade" class="atributo-input" min="-100" max="100" value="0">
+            
+            <div class="pericia-item">
+              <span class="pericia-nome">Reflexos</span>
+              <input type="number" class="pericia-manual" data-pericia="reflexos" min="-100" max="100" value="0">
+              <span class="pericia-total" data-pericia="reflexos">0</span>
+            </div>
+            
+            <div class="pericia-item">
+              <span class="pericia-nome">Defesa</span>
+              <input type="number" class="pericia-manual" data-pericia="defesa" min="-100" max="100" value="0">
+              <span class="pericia-total" data-pericia="defesa">0</span>
+            </div>
+            
+            <div class="pericia-item">
+              <span class="pericia-nome">Furtividade</span>
+              <input type="number" class="pericia-manual" data-pericia="furtividade" min="-100" max="100" value="0">
+              <span class="pericia-total" data-pericia="furtividade">0</span>
+            </div>
+            
+            <div class="pericia-item">
+              <span class="pericia-nome">Acrobacia</span>
+              <input type="number" class="pericia-manual" data-pericia="acrobacia" min="-100" max="100" value="0">
+              <span class="pericia-total" data-pericia="acrobacia">0</span>
+            </div>
+          </div>
+          
+          <!-- EGO -->
+          <div class="card-atributo">
+            <h3><i class="fas fa-gem"></i> EGO</h3>
+            <input type="number" id="ego" class="atributo-input" min="-100" max="100" value="0">
+            
+            <div class="pericia-item">
+              <span class="pericia-nome">Intimidação</span>
+              <input type="number" class="pericia-manual" data-pericia="intimidacao" min="-100" max="100" value="0">
+              <span class="pericia-total" data-pericia="intimidacao">0</span>
+            </div>
+            
+            <div class="pericia-item">
+              <span class="pericia-nome">Presença</span>
+              <input type="number" class="pericia-manual" data-pericia="presenca" min="-100" max="100" value="0">
+              <span class="pericia-total" data-pericia="presenca">0</span>
+            </div>
+            
+            <div class="pericia-item">
+              <span class="pericia-nome">Enganação</span>
+              <input type="number" class="pericia-manual" data-pericia="enganacao" min="-100" max="100" value="0">
+              <span class="pericia-total" data-pericia="enganacao">0</span>
+            </div>
+            
+            <div class="pericia-item">
+              <span class="pericia-nome">Diplomacia</span>
+              <input type="number" class="pericia-manual" data-pericia="diplomacia" min="-100" max="100" value="0">
+              <span class="pericia-total" data-pericia="diplomacia">0</span>
+            </div>
+            
+            <div class="pericia-item">
+              <span class="pericia-nome">Intuição</span>
+              <input type="number" class="pericia-manual" data-pericia="intuicao" min="-100" max="100" value="0">
+              <span class="pericia-total" data-pericia="intuicao">0</span>
+            </div>
+          </div>
         </div>
         
+        <!-- Habilidades e Botões -->
         <div style="margin-top: 30px;">
           <h3><i class="fas fa-fire"></i> HABILIDADES ESPECIAIS</h3>
           <textarea id="habilidades" style="width: 100%; min-height: 120px; font-size: 1.1rem;" placeholder="Descreva as habilidades especiais do seu personagem..."></textarea>
@@ -199,6 +451,7 @@
       </div>
     </div>
     
+    <!-- Seção Ranking -->
     <div id="secao-ranking" style="display: none;">
       <div class="ficha-container">
         <div class="em-breve">
@@ -208,6 +461,7 @@
       </div>
     </div>
     
+    <!-- Seção Leilão -->
     <div id="secao-leilao" style="display: none;">
       <div class="ficha-container">
         <div class="em-breve">
@@ -217,6 +471,7 @@
       </div>
     </div>
     
+    <!-- Seção Painel do Mestre -->
     <div id="secao-mestre" style="display: none;">
       <div class="ficha-container">
         <h1><i class="fas fa-crown"></i> PAINEL DO MESTRE</h1>
@@ -224,12 +479,13 @@
           <i class="fas fa-exclamation-circle"></i> Acesso restrito a administradores
         </div>
         <div id="lista-fichas" style="margin-top: 20px;">
+          <!-- As fichas serão carregadas aqui -->
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Modais mantidos -->
+  <!-- Modais -->
   
   <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
