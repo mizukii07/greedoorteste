@@ -1,3 +1,19 @@
+// Firebase Configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyArKOkY72tx9qOelx_oeMnUuS4XZe58df4",
+  authDomain: "green-door-rpg.firebaseapp.com",
+  projectId: "green-door-rpg",
+  storageBucket: "green-door-rpg.appspot.com",
+  messagingSenderId: "1062933456039",
+  appId: "1:1062933456039:web:c292177334060d46a1e782"
+};
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+// Tabelas de bônus de altura/peso
 const bonusAltura = {
   '1.50-1.55': { drible: 3, explosao: 2, reflexos: 2, cabeceio: -3, intimidacao: -2, defesa: -2 },
   '1.56-1.60': { drible: 2, explosao: 2, reflexos: 2, cabeceio: -3, intimidacao: -2, defesa: -1 },
@@ -25,6 +41,7 @@ const bonusPeso = {
   '96-100': { corpo: 3, chute: 3, defesa: 4, explosao: -4, reflexos: -2, drible: -1 }
 };
 
+// Mapeamentos
 const mapaPosicoes = {
   'goleiro': 'Goleiro',
   'zagueiro': 'Zagueiro',
@@ -42,7 +59,7 @@ const mapaTimes = {
   'v1': 'Time V1',
   'w1': 'Time W1',
   'x1': 'Time X1',
-  'y1': 'Time Y1',
+  'y1': '极狐Time Y1',
   'z1': 'Time Z1',
   'v2': 'Time V2',
   'w2': 'Time W2',
@@ -152,10 +169,15 @@ function atualizarBarraFolego() {
   const statusMetade = document.getElementById('folego-metade');
   const statusCheio = document.getElementById('folego-cheio');
   
+  // Resetar estilos
   statusVazio.style.color = '';
   statusMetade.style.color = '';
   statusCheio.style.color = '';
+  statusVazio.style.fontWeight = '';
+  statusMetade.style.fontWeight = '';
+  statusCheio.style.fontWeight = '';
   
+  // Aplicar estilos conforme o nível de fôlego
   if (porcentagem <= 25) {
     statusVazio.style.color = '#ff0000';
     statusVazio.style.fontWeight = 'bold';
@@ -696,5 +718,16 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
       calcularPericias();
     }
+  });
+  
+  // Event listeners para fôlego
+  document.getElementById('folego-atual').addEventListener('input', function() {
+    atualizarBarraFolego();
+    calcularPericias();
+  });
+  
+  document.getElementById('folego-total').addEventListener('input', function() {
+    atualizarBarraFolego();
+    calcularPericias();
   });
 });
