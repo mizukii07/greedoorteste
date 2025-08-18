@@ -25,7 +25,6 @@ const bonusPeso = {
   '96-100': { corpo: 3, chute: 3, defesa: 4, explosao: -4, reflexos: -2, drible: -1 }
 };
 
-// Mapeamentos
 const mapaPosicoes = {
   'goleiro': 'Goleiro',
   'zagueiro': 'Zagueiro',
@@ -43,7 +42,7 @@ const mapaTimes = {
   'v1': 'Time V1',
   'w1': 'Time W1',
   'x1': 'Time X1',
-  'y1': '极狐Time Y1',
+  'y1': 'Time Y1',
   'z1': 'Time Z1',
   'v2': 'Time V2',
   'w2': 'Time W2',
@@ -153,7 +152,6 @@ function atualizarBarraFolego() {
   const statusMetade = document.getElementById('folego-metade');
   const statusCheio = document.getElementById('folego-cheio');
   
-  // Resetar estilos
   statusVazio.style.color = '';
   statusMetade.style.color = '';
   statusCheio.style.color = '';
@@ -161,7 +159,6 @@ function atualizarBarraFolego() {
   statusMetade.style.fontWeight = '';
   statusCheio.style.fontWeight = '';
   
-  // Aplicar estilos conforme o nível de fôlego
   if (porcentagem <= 25) {
     statusVazio.style.color = '#ff0000';
     statusVazio.style.fontWeight = 'bold';
@@ -704,7 +701,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
   
-  // Event listeners para fôlego
   document.getElementById('folego-atual').addEventListener('input', function() {
     atualizarBarraFolego();
     calcularPericias();
