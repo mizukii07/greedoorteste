@@ -698,6 +698,14 @@ function escolherAmbidestro(escolha) {
   calcularPericias();
 }
 
+// Função para mostrar o modal de escolha de ambidestro
+function mostrarModalAmbidestro() {
+  const modalAmbidestro = document.getElementById('modal-ambidestro');
+  if (modalAmbidestro) {
+    modalAmbidestro.style.display = 'flex';
+  }
+}
+
 document.addEventListener('DOMContentLoaded', function() {
   // Esconder o loader após um tempo fixo (fallback)
   setTimeout(() => {
@@ -785,8 +793,7 @@ document.addEventListener('DOMContentLoaded', function() {
   if (pernaSelect) {
     pernaSelect.addEventListener('change', function() {
       if (this.value === 'ambidestro' && !escolhaAmbidestro) {
-        const modalAmbidestro = document.getElementById('modal-ambidestro');
-        if (modalAmbidestro) modalAmbidestro.style.display = 'flex';
+        mostrarModalAmbidestro();
       } else {
         calcularPericias();
       }
