@@ -99,42 +99,28 @@ function verificarImagens() {
   const loader = document.getElementById('loader');
   if (!loader) return;
   
-  // Esconder o loader após 2 segundos (fallback)
+  // Esconder o loader após um tempo fixo (fallback)
   setTimeout(() => {
     loader.style.display = 'none';
   }, 2000);
   
-  // Verificar se todas as imagens estão carregadas
-  const images = document.querySelectorAll('img');
-  let loadedCount = 0;
-  const totalImages = images.length;
-  
-  if (totalImages === 0) {
+  // Verificar se a logo existe e está carregada
+  const logo = document.getElementById('header-logo');
+  if (!logo) {
     loader.style.display = 'none';
     return;
   }
   
-  images.forEach(img => {
-    if (img.complete) {
-      loadedCount++;
-      if (loadedCount === totalImages) {
-        loader.style.display = 'none';
-      }
-    } else {
-      img.addEventListener('load', () => {
-        loadedCount++;
-        if (loadedCount === totalImages) {
-          loader.style.display = 'none';
-        }
-      });
-      img.addEventListener('error', () => {
-        loadedCount++;
-        if (loadedCount === totalImages) {
-          loader.style.display = 'none';
-        }
-      });
-    }
-  });
+  if (logo.complete) {
+    loader.style.display = 'none';
+  } else {
+    logo.addEventListener('load', () => {
+      loader.style.display = 'none';
+    });
+    logo.addEventListener('error', () => {
+      loader.style.display = 'none';
+    });
+  }
 }
 
 function atualizarBarraFolego() {
@@ -713,11 +699,11 @@ function escolherAmbidestro(escolha) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-  // Esconder o loader após 3 segundos (fallback)
+  // Esconder o loader após um tempo fixo (fallback)
   setTimeout(() => {
     const loader = document.getElementById('loader');
     if (loader) loader.style.display = 'none';
-  }, 3000);
+  }, 2000);
   
   verificarImagens();
   
@@ -823,4 +809,3 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 });
-</script>
