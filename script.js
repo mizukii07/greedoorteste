@@ -143,10 +143,19 @@ function verificarImagens() {
 function atualizarBarraFolego() {
   const atual = parseInt(document.getElementById('folego-atual').value) || 0;
   const total = parseInt(document.getElementById('folego-total').value) || 1;
-  const porcentagem = Math.min(100, (atual / total) * 100);
+  const porcentagem = Math.min(100, Math.max(0, (atual / total) * 100));
   const barra = document.getElementById('barra-folego');
   
   barra.style.width = `${porcentagem}%`;
+  
+  // Atualizar cores conforme o nível de fôlego
+  if (porcentagem <= 25) {
+    barra.style.backgroundColor = '#e74c3c';
+  } else if (porcentagem <= 75) {
+    barra.style.backgroundColor = '#f39c12';
+  } else {
+    barra.style.backgroundColor = '#2ecc71';
+  }
   
   const statusVazio = document.getElementById('folego-vazio');
   const statusMetade = document.getElementById('folego-metade');
@@ -220,15 +229,22 @@ function calcularPericias() {
     if (bonusAjustadoA[periciaId]) valor += bonusAjustadoA[periciaId];
     if (bonusAjustadoP[periciaId]) valor += bonusAjustadoP[periciaId];
 
+    // Aplicar bônus de ambidestro
     if (perna === 'ambidestro') {
+      // Bônus fixos para todas as perícias de ambidestro
       if (['passe','drible','dominio','roubo'].includes(periciaId)) valor += 5;
+      
+      // Bônus específico baseado na escolha do jogador
       if ((periciaId === 'pontaria' && escolhaAmbidestro === 'pontaria') || 
-          (periciaId === 'chute' && escolhaAmbidestro === 'chute')) valor += 5;
+          (periciaId === 'chute' && escolhaAmbidestro === 'chute')) {
+        valor += 5;
+      }
     }
 
     const pontosManuais = parseInt(item.querySelector('.pericia-manual').value) || 0;
     let valorTotal = valor + pontosManuais;
 
+    // Aplicar penalidade de fôlego
     if (staminaPenalty !== 1) valorTotal = Math.floor(valorTotal * staminaPenalty);
 
     item.querySelector('.pericia-total').textContent = valorTotal;
@@ -468,7 +484,7 @@ async function carregarFichasDoUsuario() {
       return;
     }
     
-    document.getElementById('seletor-fichas').style.display = 'block';
+  document.getElementById('seletor-fichas').style.display = 'block';
     fichasUsuario = [];
     
     snapshot.forEach(doc => {
@@ -711,3 +727,4 @@ document.addEventListener('DOMContentLoaded', function() {
     calcularPericias();
   });
 });
+</script>
