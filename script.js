@@ -97,47 +97,44 @@ function getBonus(value, table) {
 
 function verificarImagens() {
   const loader = document.getElementById('loader');
-  const logo = document.getElementById('header-logo');
+  if (!loader) return;
   
-  if (!logo) {
+  // Esconder o loader após 2 segundos (fallback)
+  setTimeout(() => {
+    loader.style.display = 'none';
+  }, 2000);
+  
+  // Verificar se todas as imagens estão carregadas
+  const images = document.querySelectorAll('img');
+  let loadedCount = 0;
+  const totalImages = images.length;
+  
+  if (totalImages === 0) {
     loader.style.display = 'none';
     return;
   }
   
-  const fallbackTimeout = setTimeout(() => {
-    loader.style.display = 'none';
-    if (logo) logo.removeEventListener('load', onLogoLoad);
-    if (logo) logo.removeEventListener('error', onLogoError);
-  }, 3000);
-
-  function onLogoLoad() {
-    clearTimeout(fallbackTimeout);
-    setTimeout(() => {
-      loader.style.display = 'none';
-      if (logo) logo.removeEventListener('load', onLogoLoad);
-      if (logo) logo.removeEventListener('error', onLogoError);
-    }, 1000);
-  }
-
-  function onLogoError() {
-    clearTimeout(fallbackTimeout);
-    setTimeout(() => {
-      loader.style.display = 'none';
-      if (logo) logo.removeEventListener('load', onLogoLoad);
-      if (logo) logo.removeEventListener('error', onLogoError);
-    }, 1000);
-  }
-
-  if (logo.complete) {
-    if (logo.naturalHeight !== 0) {
-      onLogoLoad();
+  images.forEach(img => {
+    if (img.complete) {
+      loadedCount++;
+      if (loadedCount === totalImages) {
+        loader.style.display = 'none';
+      }
     } else {
-      onLogoError();
+      img.addEventListener('load', () => {
+        loadedCount++;
+        if (loadedCount === totalImages) {
+          loader.style.display = 'none';
+        }
+      });
+      img.addEventListener('error', () => {
+        loadedCount++;
+        if (loadedCount === totalImages) {
+          loader.style.display = 'none';
+        }
+      });
     }
-  } else {
-    logo.addEventListener('load', onLogoLoad);
-    logo.addEventListener('error', onLogoError);
-  }
+  });
 }
 
 function atualizarBarraFolego() {
@@ -146,37 +143,41 @@ function atualizarBarraFolego() {
   const porcentagem = Math.min(100, Math.max(0, (atual / total) * 100));
   const barra = document.getElementById('barra-folego');
   
-  barra.style.width = `${porcentagem}%`;
-  
-  // Atualizar cores conforme o nível de fôlego
-  if (porcentagem <= 25) {
-    barra.style.backgroundColor = '#e74c3c';
-  } else if (porcentagem <= 75) {
-    barra.style.backgroundColor = '#f39c12';
-  } else {
-    barra.style.backgroundColor = '#2ecc71';
+  if (barra) {
+    barra.style.width = `${porcentagem}%`;
+    
+    // Atualizar cores conforme o nível de fôlego
+    if (porcentagem <= 25) {
+      barra.style.backgroundColor = '#e74c3c';
+    } else if (porcentagem <= 75) {
+      barra.style.backgroundColor = '#f39c12';
+    } else {
+      barra.style.backgroundColor = '#2ecc71';
+    }
   }
   
   const statusVazio = document.getElementById('folego-vazio');
   const statusMetade = document.getElementById('folego-metade');
   const statusCheio = document.getElementById('folego-cheio');
   
-  statusVazio.style.color = '';
-  statusMetade.style.color = '';
-  statusCheio.style.color = '';
-  statusVazio.style.fontWeight = '';
-  statusMetade.style.fontWeight = '';
-  statusCheio.style.fontWeight = '';
-  
-  if (porcentagem <= 25) {
-    statusVazio.style.color = '#ff0000';
-    statusVazio.style.fontWeight = 'bold';
-  } else if (porcentagem <= 75) {
-    statusMetade.style.color = '#ffcc00';
-    statusMetade.style.fontWeight = 'bold';
-  } else {
-    statusCheio.style.color = '#00ff00';
-    statusCheio.style.fontWeight = 'bold';
+  if (statusVazio && statusMetade && statusCheio) {
+    statusVazio.style.color = '';
+    statusMetade.style.color = '';
+    statusCheio.style.color = '';
+    statusVazio.style.fontWeight = '';
+    statusMetade.style.fontWeight = '';
+    statusCheio.style.fontWeight = '';
+    
+    if (porcentagem <= 25) {
+      statusVazio.style.color = '#ff0000';
+      statusVazio.style.fontWeight = 'bold';
+    } else if (porcentagem <= 75) {
+      statusMetade.style.color = '#ffcc00';
+      statusMetade.style.fontWeight = 'bold';
+    } else {
+      statusCheio.style.color = '#00ff00';
+      statusCheio.style.fontWeight = 'bold';
+    }
   }
 }
 
@@ -202,7 +203,10 @@ function calcularPericias() {
   const bonusAjustadoP = ajustarDefesa({...bonusP});
 
   const porcentagemFolego = Math.min(100, (folegoAtual / folegoTotal) * 100);
-  document.getElementById('barra-folego').style.width = `${porcentagemFolego}%`;
+  const barraFolego = document.getElementById('barra-folego');
+  if (barraFolego) {
+    barraFolego.style.width = `${porcentagemFolego}%`;
+  }
   
   let staminaPenalty = 1;
   let staminaClass = '';
@@ -261,22 +265,36 @@ function calcularPericias() {
 
 function atualizarCamposPosicao() {
   const posicao = document.getElementById('posicao').value;
-  document.getElementById('sg-container').style.display = 
-    ['goleiro', 'zagueiro', 'lateral_direito', 'lateral_esquerdo'].includes(posicao) 
-    ? 'block' : 'none';
+  const sgContainer = document.getElementById('sg-container');
+  if (sgContainer) {
+    sgContainer.style.display = 
+      ['goleiro', 'zagueiro', 'lateral_direito', 'lateral_esquerdo'].includes(posicao) 
+      ? 'block' : 'none';
+  }
 }
 
 function mostrarSecao(secao) {
-  document.querySelectorAll('.conteudo > div').forEach(el => el.style.display = 'none');
-  document.getElementById(`secao-${secao}`).style.display = 'block';
+  document.querySelectorAll('.conteudo > div').forEach(el => {
+    if (el.style) el.style.display = 'none';
+  });
+  
+  const secaoElement = document.getElementById(`secao-${secao}`);
+  if (secaoElement) {
+    secaoElement.style.display = 'block';
+  }
   
   document.querySelectorAll('nav a').forEach(item => item.classList.remove('ativo'));
-  document.querySelector(`nav a[onclick="mostrarSecao('${secao}')"]`).classList.add('ativo');
+  const navLink = document.querySelector(`nav a[onclick*="${secao}"]`);
+  if (navLink) {
+    navLink.classList.add('ativo');
+  }
   
   if (secao === 'mestre') verificarAdmin();
   
-  document.getElementById('btn-excluir').style.display = 
-    (secao === 'ficha' && fichaId) ? 'block' : 'none';
+  const btnExcluir = document.getElementById('btn-excluir');
+  if (btnExcluir) {
+    btnExcluir.style.display = (secao === 'ficha' && fichaId) ? 'block' : 'none';
+  }
 }
 
 async function verificarAdmin() {
@@ -284,8 +302,10 @@ async function verificarAdmin() {
   const adminMessage = document.getElementById('admin-message');
   
   if (!user) {
-    adminMessage.style.display = 'block';
-    adminMessage.innerHTML = '<i class="fas fa-exclamation-circle"></i> Faça login para acessar o Painel do Mestre';
+    if (adminMessage) {
+      adminMessage.style.display = 'block';
+      adminMessage.innerHTML = '<i class="fas fa-exclamation-circle"></i> Faça login para acessar o Painel do Mestre';
+    }
     return;
   }
   
@@ -293,16 +313,20 @@ async function verificarAdmin() {
     const adminDoc = await db.collection('admins').doc(user.uid).get();
     isAdmin = adminDoc.exists;
     
-    if (isAdmin) {
-      adminMessage.style.display = 'none';
-      carregarFichasParaMestre();
-    } else {
-      adminMessage.style.display = 'block';
-      adminMessage.innerHTML = '<i class="fas fa-exclamation-circle"></i> Acesso restrito a administradores';
+    if (adminMessage) {
+      if (isAdmin) {
+        adminMessage.style.display = 'none';
+        carregarFichasParaMestre();
+      } else {
+        adminMessage.style.display = 'block';
+        adminMessage.innerHTML = '<i class="fas fa-exclamation-circle"></i> Acesso restrito a administradores';
+      }
     }
   } catch (error) {
-    adminMessage.style.display = 'block';
-    adminMessage.innerHTML = '<i class="fas fa-exclamation-circle"></i> Erro ao verificar permissões';
+    if (adminMessage) {
+      adminMessage.style.display = 'block';
+      adminMessage.innerHTML = '<i class="fas fa-exclamation-circle"></i> Erro ao verificar permissões';
+    }
   }
 }
 
@@ -333,7 +357,7 @@ async function salvarFicha() {
     sg: document.getElementById('sg').value,
     deslocamento: document.getElementById('deslocamento').value,
     time: document.getElementById('time').value,
-    avatar: document.getElementById('avatar-img').src || '',
+    avatar: document.getElementById('avatar-img') ? document.getElementById('avatar-img').src || '' : '',
     habilidades: document.getElementById('habilidades').value,
     pericias: {},
     userId: user.uid
@@ -353,11 +377,13 @@ async function salvarFicha() {
   try {
     if (fichaId) {
       await db.collection('fichas').doc(fichaId).update(ficha);
-      document.getElementById('btn-excluir').style.display = 'block';
+      const btnExcluir = document.getElementById('btn-excluir');
+      if (btnExcluir) btnExcluir.style.display = 'block';
     } else {
       const docRef = await db.collection('fichas').add(ficha);
       fichaId = docRef.id;
-      document.getElementById('btn-excluir').style.display = 'block';
+      const btnExcluir = document.getElementById('btn-excluir');
+      if (btnExcluir) btnExcluir.style.display = 'block';
     }
     alert('Ficha salva com sucesso!');
     carregarFichasDoUsuario();
@@ -386,9 +412,17 @@ function criarNovaFicha() {
   document.getElementById('deslocamento').value = 10;
   document.getElementById('time').value = '';
   document.getElementById('habilidades').value = '';
-  document.getElementById('avatar-img').src = '';
-  document.getElementById('avatar-img').style.display = 'none';
-  document.querySelector('.avatar span').style.display = 'block';
+  
+  const avatarImg = document.getElementById('avatar-img');
+  if (avatarImg) {
+    avatarImg.src = '';
+    avatarImg.style.display = 'none';
+  }
+  
+  const avatarSpan = document.querySelector('.avatar span');
+  if (avatarSpan) {
+    avatarSpan.style.display = 'block';
+  }
   
   ['potencia', 'tecnica', 'velocidade', 'agilidade', 'ego'].forEach(attr => {
     document.getElementById(attr).value = 0;
@@ -398,7 +432,8 @@ function criarNovaFicha() {
   document.querySelectorAll('.pericia-total').forEach(span => span.textContent = '0');
   
   fichaId = '';
-  document.getElementById('btn-excluir').style.display = 'none';
+  const btnExcluir = document.getElementById('btn-excluir');
+  if (btnExcluir) btnExcluir.style.display = 'none';
   
   atualizarBarraFolego();
   atualizarCamposPosicao();
@@ -415,7 +450,8 @@ async function carregarFichaSelecionada() {
     if (doc.exists) {
       preencherFormulario(doc.data());
       fichaId = id;
-      document.getElementById('btn-excluir').style.display = 'block';
+      const btnExcluir = document.getElementById('btn-excluir');
+      if (btnExcluir) btnExcluir.style.display = 'block';
     }
   } catch (error) {
     alert('Erro ao carregar ficha: ' + error.message);
@@ -445,12 +481,17 @@ function preencherFormulario(ficha) {
   
   if (ficha.avatar) {
     const img = document.getElementById('avatar-img');
-    img.src = ficha.avatar;
-    img.style.display = 'block';
-    document.querySelector('.avatar span').style.display = 'none';
+    if (img) {
+      img.src = ficha.avatar;
+      img.style.display = 'block';
+      const avatarSpan = document.querySelector('.avatar span');
+      if (avatarSpan) avatarSpan.style.display = 'none';
+    }
   } else {
-    document.getElementById('avatar-img').style.display = 'none';
-    document.querySelector('.avatar span').style.display = 'block';
+    const img = document.getElementById('avatar-img');
+    if (img) img.style.display = 'none';
+    const avatarSpan = document.querySelector('.avatar span');
+    if (avatarSpan) avatarSpan.style.display = 'block';
   }
   
   ['potencia', 'tecnica', 'velocidade', 'agilidade', 'ego'].forEach(attr => {
@@ -476,15 +517,20 @@ async function carregarFichasDoUsuario() {
   try {
     const snapshot = await db.collection('fichas').where('userId', '==', user.uid).get();
     const seletor = document.getElementById('fichas-usuario');
+    if (!seletor) return;
+    
     seletor.innerHTML = '';
     
     if (snapshot.empty) {
-      document.getElementById('seletor-fichas').style.display = 'none';
+      const seletorFichas = document.getElementById('seletor-fichas');
+      if (seletorFichas) seletorFichas.style.display = 'none';
       fichasUsuario = [];
       return;
     }
     
-  document.getElementById('seletor-fichas').style.display = 'block';
+    const seletorFichas = document.getElementById('seletor-fichas');
+    if (seletorFichas) seletorFichas.style.display = 'block';
+    
     fichasUsuario = [];
     
     snapshot.forEach(doc => {
@@ -501,13 +547,17 @@ async function carregarFichasDoUsuario() {
       seletor.value = seletor.options[seletor.options.length - 1].value;
       carregarFichaSelecionada();
     }
-  } catch (error) {}
+  } catch (error) {
+    console.error('Erro ao carregar fichas do usuário:', error);
+  }
 }
 
 async function carregarFichasParaMestre() {
   try {
     const snapshot = await db.collection('fichas').get();
     const listaFichas = document.getElementById('lista-fichas');
+    if (!listaFichas) return;
+    
     listaFichas.innerHTML = '';
     
     if (snapshot.empty) {
@@ -565,14 +615,20 @@ function editarFicha(id) {
 function excluirFicha() {
   if (!fichaId) return;
   const fichaNome = document.getElementById('nome').value || 'esta ficha';
-  document.getElementById('excluir-mensagem').textContent = `Tem certeza que deseja excluir permanentemente "${fichaNome}"?`;
-  document.getElementById('modal-excluir').style.display = 'flex';
+  const excluirMensagem = document.getElementById('excluir-mensagem');
+  const modalExcluir = document.getElementById('modal-excluir');
+  
+  if (excluirMensagem) excluirMensagem.textContent = `Tem certeza que deseja excluir permanentemente "${fichaNome}"?`;
+  if (modalExcluir) modalExcluir.style.display = 'flex';
 }
 
 function excluirFichaAdmin(id) {
   fichaParaExcluir = id;
-  document.getElementById('excluir-mensagem').textContent = `Tem certeza que deseja excluir esta ficha permanentemente?`;
-  document.getElementById('modal-excluir').style.display = 'flex';
+  const excluirMensagem = document.getElementById('excluir-mensagem');
+  const modalExcluir = document.getElementById('modal-excluir');
+  
+  if (excluirMensagem) excluirMensagem.textContent = `Tem certeza que deseja excluir esta ficha permanentemente?`;
+  if (modalExcluir) modalExcluir.style.display = 'flex';
 }
 
 async function confirmarExclusao() {
@@ -600,20 +656,24 @@ async function confirmarExclusao() {
 }
 
 function fecharExclusao() {
-  document.getElementById('modal-excluir').style.display = 'none';
+  const modalExcluir = document.getElementById('modal-excluir');
+  if (modalExcluir) modalExcluir.style.display = 'none';
   fichaParaExcluir = null;
 }
 
 function fecharModalFicha() {
-  document.getElementById('modal-ficha').style.display = 'none';
+  const modalFicha = document.getElementById('modal-ficha');
+  if (modalFicha) modalFicha.style.display = 'none';
 }
 
 function abrirLogin() {
-  document.getElementById('modal-login').style.display = 'flex';
+  const modalLogin = document.getElementById('modal-login');
+  if (modalLogin) modalLogin.style.display = 'flex';
 }
 
 function fecharLogin() {
-  document.getElementById('modal-login').style.display = 'none';
+  const modalLogin = document.getElementById('modal-login');
+  if (modalLogin) modalLogin.style.display = 'none';
 }
 
 async function fazerLoginGoogle() {
@@ -622,12 +682,14 @@ async function fazerLoginGoogle() {
     const result = await auth.signInWithPopup(provider);
     const user = result.user;
     const userAvatar = document.getElementById('user-avatar');
-    if (user.photoURL) {
-      userAvatar.innerHTML = `<img src="${user.photoURL}" alt="${user.displayName}">`;
-    } else {
-      userAvatar.innerHTML = '<i class="fas fa-user"></i>';
+    if (userAvatar) {
+      if (user.photoURL) {
+        userAvatar.innerHTML = `<img src="${user.photoURL}" alt="${user.displayName}">`;
+      } else {
+        userAvatar.innerHTML = '<i class="fas fa-user"></i>';
+      }
+      userAvatar.style.display = 'flex';
     }
-    userAvatar.style.display = 'flex';
     fecharLogin();
   } catch (error) {
     alert('Erro no login com Google: ' + error.message);
@@ -645,12 +707,18 @@ function logout() {
 
 function escolherAmbidestro(escolha) {
   escolhaAmbidestro = escolha;
-  document.getElementById('modal-ambidestro').style.display = 'none';
+  const modalAmbidestro = document.getElementById('modal-ambidestro');
+  if (modalAmbidestro) modalAmbidestro.style.display = 'none';
   calcularPericias();
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-  setTimeout(() => document.getElementById('loader').style.display = 'none', 3000);
+  // Esconder o loader após 3 segundos (fallback)
+  setTimeout(() => {
+    const loader = document.getElementById('loader');
+    if (loader) loader.style.display = 'none';
+  }, 3000);
+  
   verificarImagens();
   
   auth.onAuthStateChanged(user => {
@@ -658,24 +726,34 @@ document.addEventListener('DOMContentLoaded', function() {
     const userAvatar = document.getElementById('user-avatar');
     
     if (user) {
-      menuLogin.innerHTML = '<i class="fas fa-sign-out-alt"></i> Sair';
-      menuLogin.onclick = logout;
-      
-      if (user.photoURL) {
-        userAvatar.innerHTML = `<img src="${user.photoURL}" alt="${user.displayName}">`;
-      } else {
-        userAvatar.innerHTML = '<i class="fas fa-user"></i>';
+      if (menuLogin) {
+        menuLogin.innerHTML = '<i class="fas fa-sign-out-alt"></i> Sair';
+        menuLogin.onclick = logout;
       }
-      userAvatar.style.display = 'flex';
+      
+      if (userAvatar) {
+        if (user.photoURL) {
+          userAvatar.innerHTML = `<img src="${user.photoURL}" alt="${user.displayName}">`;
+        } else {
+          userAvatar.innerHTML = '<i class="fas fa-user"></i>';
+        }
+        userAvatar.style.display = 'flex';
+      }
       
       carregarFichasDoUsuario();
       db.collection('admins').doc(user.uid).get().then(doc => isAdmin = doc.exists);
     } else {
-      menuLogin.innerHTML = '<i class="fas fa-sign-in-alt"></i> Entrar';
-      menuLogin.onclick = login;
-      userAvatar.style.display = 'none';
-      document.getElementById('seletor-fichas').style.display = 'none';
-      document.getElementById('btn-excluir').style.display = 'none';
+      if (menuLogin) {
+        menuLogin.innerHTML = '<i class="fas fa-sign-in-alt"></i> Entrar';
+        menuLogin.onclick = login;
+      }
+      if (userAvatar) userAvatar.style.display = 'none';
+      
+      const seletorFichas = document.getElementById('seletor-fichas');
+      if (seletorFichas) seletorFichas.style.display = 'none';
+      
+      const btnExcluir = document.getElementById('btn-excluir');
+      if (btnExcluir) btnExcluir.style.display = 'none';
     }
   });
   
@@ -684,47 +762,65 @@ document.addEventListener('DOMContentLoaded', function() {
   calcularPericias();
   
   ['altura', 'peso', 'perna', 'folego-atual', 'folego-total', 'posicao', 'posicao_secundaria'].forEach(id => {
-    document.getElementById(id).addEventListener('change', calcularPericias);
+    const element = document.getElementById(id);
+    if (element) element.addEventListener('change', calcularPericias);
   });
   
   ['potencia', 'tecnica', 'velocidade', 'agilidade', 'ego'].forEach(attr => {
-    document.getElementById(attr).addEventListener('input', calcularPericias);
+    const element = document.getElementById(attr);
+    if (element) element.addEventListener('input', calcularPericias);
   });
   
   document.querySelectorAll('.pericia-manual').forEach(input => {
     input.addEventListener('input', calcularPericias);
   });
 
-  document.getElementById('avatar-input').addEventListener('change', function(e) {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = function(event) {
-        const img = document.getElementById('avatar-img');
-        img.src = event.target.result;
-        img.style.display = 'block';
-        document.querySelector('.avatar span').style.display = 'none';
-      };
-      reader.readAsDataURL(file);
-    }
-  });
+  const avatarInput = document.getElementById('avatar-input');
+  if (avatarInput) {
+    avatarInput.addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+          const img = document.getElementById('avatar-img');
+          if (img) {
+            img.src = event.target.result;
+            img.style.display = 'block';
+            const avatarSpan = document.querySelector('.avatar span');
+            if (avatarSpan) avatarSpan.style.display = 'none';
+          }
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  }
 
-  document.getElementById('perna').addEventListener('change', function() {
-    if (this.value === 'ambidestro' && !escolhaAmbidestro) {
-      document.getElementById('modal-ambidestro').style.display = 'flex';
-    } else {
+  const pernaSelect = document.getElementById('perna');
+  if (pernaSelect) {
+    pernaSelect.addEventListener('change', function() {
+      if (this.value === 'ambidestro' && !escolhaAmbidestro) {
+        const modalAmbidestro = document.getElementById('modal-ambidestro');
+        if (modalAmbidestro) modalAmbidestro.style.display = 'flex';
+      } else {
+        calcularPericias();
+      }
+    });
+  }
+  
+  const folegoAtual = document.getElementById('folego-atual');
+  if (folegoAtual) {
+    folegoAtual.addEventListener('input', function() {
+      atualizarBarraFolego();
       calcularPericias();
-    }
-  });
+    });
+  }
   
-  document.getElementById('folego-atual').addEventListener('input', function() {
-    atualizarBarraFolego();
-    calcularPericias();
-  });
-  
-  document.getElementById('folego-total').addEventListener('input', function() {
-    atualizarBarraFolego();
-    calcularPericias();
-  });
+  const folegoTotal = document.getElementById('folego-total');
+  if (folegoTotal) {
+    folegoTotal.addEventListener('input', function() {
+      atualizarBarraFolego();
+      calcularPericias();
+    });
+  }
 });
 </script>
