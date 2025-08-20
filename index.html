@@ -6,85 +6,12 @@
   <title>GREEN DOOR RPG - Ficha Completa</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@400;500&family=Bebas+Neue&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="styles.css">
-  <style>
-    /* Estilos para modais */
-    .modal {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.7);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-    }
-    
-    .modal-content {
-      background-color: #2c3e50;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-      max-width: 500px;
-      width: 90%;
-      text-align: center;
-    }
-    
-    .modal h2 {
-      color: #3498db;
-      margin-bottom: 15px;
-    }
-    
-    .modal p {
-      margin-bottom: 20px;
-      color: #ecf0f1;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="loader" id="loader">
     <div class="spinner"></div>
     <p>Carregando o universo do Green Door RPG...</p>
-  </div>
-
-  <!-- Modal para escolha do bônus de ambidestro -->
-  <div id="modal-ambidestro" class="modal">
-    <div class="modal-content">
-      <h2>Escolha o bônus de Ambidestro</h2>
-      <p>Você escolheu ser ambidestro. Além do bônus fixo em Passe, Drible, Domínio e Roubo de Bola, escolha um bônus adicional:</p>
-      <div class="btn-container">
-        <button class="btn" onclick="escolherAmbidestro('pontaria')">+5 em Pontaria</button>
-        <button class="btn" onclick="escolherAmbidestro('chute')">+5 em Chute</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal de confirmação de exclusão -->
-  <div id="modal-excluir" class="modal">
-    <div class="modal-content">
-      <h2>Confirmar Exclusão</h2>
-      <p id="excluir-mensagem">Tem certeza que deseja excluir esta ficha permanentemente?</p>
-      <div class="btn-container">
-        <button class="btn btn-delete" onclick="confirmarExclusao()">Excluir</button>
-        <button class="btn" onclick="fecharExclusao()">Cancelar</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal de login -->
-  <div id="modal-login" class="modal">
-    <div class="modal-content">
-      <h2>Login</h2>
-      <p>Faça login para salvar sua ficha</p>
-      <div class="btn-container">
-        <button class="btn" onclick="fazerLoginGoogle()">
-          <i class="fab fa-google"></i> Entrar com Google
-        </button>
-        <button class="btn" onclick="fecharLogin()">Cancelar</button>
-      </div>
-    </div>
   </div>
 
   <header>
@@ -529,10 +456,72 @@
     <div id="secao-mestre" style="display: none;">
       <div class="ficha-container">
         <h1><i class="fas fa-crown"></i> PAINEL DO MESTRE</h1>
+        <div style="display:flex; gap:12px; align-items:center; margin-top:10px;">
+          <button class="btn" onclick="criarNovaFicha()" title="Criar nova ficha">
+            <i class="fas fa-plus"></i> Nova Ficha
+          </button>
+        </div>
         <div id="admin-message" style="color: #ff6b6b; margin-bottom: 20px; display: none;">
           <i class="fas fa-exclamation-circle"></i> Acesso restrito a administradores
         </div>
-        <div id="lista-fichas" style="margin-top: 20px;"></div>
+        <div id="lista-fichas" style="margin-top: 20px;">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal-login" class="modal">
+    <div class="modal-conteudo">
+      <h3>ENTRAR NO GREEN DOOR</h3>
+      <p>Faça login para salvar sua ficha e acessar todos os recursos</p>
+      <div class="modal-botoes">
+        <button class="btn btn-login" onclick="fazerLoginGoogle()">
+          <i class="fab fa-google"></i> Entrar com Google
+        </button>
+        <button class="btn" onclick="fecharLogin()">
+          <i class="fas fa-times"></i> Cancelar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal-ambidestro" class="modal">
+    <div class="modal-conteudo">
+      <h3><i class="fas fa-ambulance"></i> ESCOLHA DE AMBIDESTRO</h3>
+      <p>Você selecionou Ambidestro. Escolha onde aplicar seu bônus adicional:</p>
+      <div class="modal-botoes">
+        <button class="btn" onclick="escolherAmbidestro('pontaria')">
+          <i class="fas fa-bullseye"></i> +5 Pontaria
+        </button>
+        <button class="btn" onclick="escolherAmbidestro('chute')">
+          <i class="fas fa-futbol"></i> +5 Chute
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal-ficha" class="modal">
+    <div class="modal-conteudo">
+      <h3 id="modal-ficha-titulo">FICHA DO JOGADOR</h3>
+      <button class="btn" onclick="fecharModalFicha()" style="position: absolute; top: 15px; right: 15px;">
+        <i class="fas fa-times"></i>
+      </button>
+      <div id="modal-ficha-conteudo" class="modal-ficha">
+      </div>
+    </div>
+  </div>
+
+  <div id="modal-excluir" class="modal">
+    <div class="modal-conteudo">
+      <h3><i class="fas fa-exclamation-triangle"></i> CONFIRMAR EXCLUSÃO</h3>
+      <p id="excluir-mensagem">Tem certeza que deseja excluir esta ficha permanentemente?</p>
+      <div class="modal-botoes">
+        <button class="btn btn-delete" onclick="confirmarExclusao()">
+          <i class="fas fa-trash"></i> Sim, Excluir
+        </button>
+        <button class="btn" onclick="fecharExclusao()">
+          <i class="fas fa-times"></i> Cancelar
+        </button>
       </div>
     </div>
   </div>
