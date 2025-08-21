@@ -419,63 +419,10 @@
           </div>
         </div>
         
-        <!-- NOVA SEÇÃO DE HABILIDADES ESPECIAIS -->
-        <div class="habilidades-container" style="margin-top: 30px;">
-          <h2><i class="fas fa-fire"></i> HABILIDADES ESPECIAIS</h2>
-          <p class="habilidades-contador" id="habilidades-contador">0/15 habilidades</p>
-          
-          <button class="btn btn-add-habilidade" onclick="adicionarNovaHabilidade()" id="btn-add-habilidade">
-            <i class="fas fa-plus-circle"></i> Adicionar Habilidade
-          </button>
-          
-          <div id="form-nova-habilidade" class="form-habilidade" style="display: none;">
-            <h3>Nova Habilidade</h3>
-            <div class="form-habilidade-grid">
-              <div class="form-habilidade-item nome-habilidade">
-                <label for="nome-habilidade-input">Nome da Habilidade</label>
-                <input type="text" id="nome-habilidade-input" placeholder="Ex: Chute Flamejante">
-              </div>
-              
-              <div class="form-habilidade-item tipo-habilidade">
-                <label>Tipo</label>
-                <div class="tipo-options">
-                  <label class="radio-option">
-                    <input type="radio" name="tipo-habilidade" value="passiva" checked>
-                    <span>Passiva</span>
-                  </label>
-                  <label class="radio-option">
-                    <input type="radio" name="tipo-habilidade" value="ativa">
-                    <span>Ativa</span>
-                  </label>
-                </div>
-              </div>
-              
-              <div class="form-habilidade-item custo-habilidade" id="custo-container" style="display: none;">
-                <label for="custo-habilidade-input">Custo de Fôlego</label>
-                <input type="number" id="custo-habilidade-input" min="1" value="1">
-              </div>
-            </div>
-            
-            <div class="form-habilidade-item">
-              <label for="descricao-habilidade-input">Descrição e Efeitos</label>
-              <textarea id="descricao-habilidade-input" placeholder="Descreva os efeitos da habilidade..."></textarea>
-            </div>
-            
-            <div class="form-habilidade-botoes">
-              <button class="btn" onclick="salvarHabilidade()">
-                <i class="fas fa-save"></i> Salvar Habilidade
-              </button>
-              <button class="btn btn-cancelar" onclick="cancelarHabilidade()">
-                <i class="fas fa-times"></i> Cancelar
-              </button>
-            </div>
-          </div>
-          
-          <div id="lista-habilidades" class="lista-habilidades">
-            <!-- As habilidades serão adicionadas aqui dinamicamente -->
-          </div>
+        <div style="margin-top: 30px;">
+          <h3><i class="fas fa-fire"></i> HABILIDADES ESPECIAIS</h3>
+          <textarea id="habilidades" style="width: 100%; min-height: 120px; font-size: 1.1rem;" placeholder="Descreva as habilidades especiais do seu personagem..."></textarea>
         </div>
-        <!-- FIM DA NOVA SEÇÃO -->
         
         <div class="btn-container">
           <button class="btn" onclick="salvarFicha()">
