@@ -1,4 +1,18 @@
-// Tabelas de bônus de altura/peso
+// Firebase Configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyArKOkY72tx9qOelx_oeMnUuS4XZe58df4",
+  authDomain: "green-door-rpg.firebaseapp.com",
+  projectId: "green-door-rpg",
+  storageBucket: "green-door-rpg.appspot.com",
+  messagingSenderId: "1062933456039",
+  appId: "1:1062933456039:web:c292177334060d46a1e782"
+};
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+
 const bonusAltura = {
   '1.50-1.55': { drible: 3, explosao: 2, reflexos: 2, cabeceio: -3, intimidacao: -2, defesa: -2 },
   '1.56-1.60': { drible: 2, explosao: 2, reflexos: 2, cabeceio: -3, intimidacao: -2, defesa: -1 },
@@ -26,7 +40,6 @@ const bonusPeso = {
   '96-100': { corpo: 3, chute: 3, defesa: 4, explosao: -4, reflexos: -2, drible: -1 }
 };
 
-// Função para identificar intervalo
 function getBonus(value, table) {
   const numValue = Number(value);
   if (isNaN(numValue)) return {};
@@ -43,7 +56,6 @@ function getBonus(value, table) {
   return {};
 }
 
-// Mapeamento de posições para nomes amigáveis
 const mapaPosicoes = {
   'goleiro': 'Goleiro',
   'zagueiro': 'Zagueiro',
@@ -57,7 +69,6 @@ const mapaPosicoes = {
   'nenhuma': 'Nenhuma'
 };
 
-// Mapeamento de times para nomes amigáveis
 const mapaTimes = {
   'v1': 'Time V1',
   'w1': 'Time W1',
@@ -71,7 +82,6 @@ const mapaTimes = {
   'z2': 'Time Z2'
 };
 
-// Mapeamento de perícias para nomes amigáveis
 const mapaPericias = {
   corpo: "Corpo a Corpo",
   cabeceio: "Cabeceio",
@@ -94,25 +104,23 @@ const mapaPericias = {
   intuicao: "Intuição"
 };
 
-// Variáveis globais
 let escolhaAmbidestro = '';
 let fichaId = '';
 let isAdmin = false;
 let fichasUsuario = [];
 let fichaParaExcluir = null;
+let habilidades = [];
+let editandoHabilidadeIndex = -1;
 
-// Correção da função verificarImagens
 function verificarImagens() {
   const loader = document.getElementById('loader');
   const logo = document.getElementById('header-logo');
   
-  // Se não encontrou o logo, ocultar loader e retornar
   if (!logo) {
     loader.style.display = 'none';
     return;
   }
   
-  // Timeout de fallback (máximo 3 segundos)
   const fallbackTimeout = setTimeout(() => {
     loader.style.display = 'none';
     if (logo) logo.removeEventListener('load', onLogoLoad);
@@ -137,7 +145,6 @@ function verificarImagens() {
     }, 1000);
   }
 
-  // Se a logo já estiver carregada ou tiver dado erro
   if (logo.complete) {
     if (logo.naturalHeight !== 0) {
       onLogoLoad();
@@ -150,30 +157,26 @@ function verificarImagens() {
   }
 }
 
-// Atualizar barra de fôlego
 function atualizarBarraFolego() {
   const atual = parseInt(document.getElementById('folego-atual').value) || 0;
   const total = parseInt(document.getElementById('folego-total').value) || 1;
-  const porcentagem = Math.min(100, (atual / total) * 100);
+  const porcentagem = total > 0 ? Math.min(100, (atual / total) * 100) : 0;
   const barra = document.getElementById('barra-folego');
   
   barra.style.width = `${porcentagem}%`;
   
-  // Atualizar status visual
   const statusVazio = document.getElementById('folego-vazio');
   const statusMetade = document.getElementById('folego-metade');
   const statusCheio = document.getElementById('folego-cheio');
   
-  // Resetar todos
   statusVazio.style.color = '';
   statusMetade.style.color = '';
   statusCheio.style.color = '';
   
-  // Destacar o status atual
-  if (porcentagem <= 25) {
+  if (atual <= 0) {
     statusVazio.style.color = '#ff0000';
     statusVazio.style.fontWeight = 'bold';
-  } else if (porcentagem <= 75) {
+  } else if (atual <= Math.floor(total / 2)) {
     statusMetade.style.color = '#ffcc00';
     statusMetade.style.fontWeight = 'bold';
   } else {
@@ -182,19 +185,17 @@ function atualizarBarraFolego() {
   }
 }
 
-// Calcular todas as perícias
 function calcularPericias() {
   const altura = parseFloat(document.getElementById('altura').value) || 1.75;
   const peso = parseInt(document.getElementById('peso').value) || 70;
   const perna = document.getElementById('perna').value;
   const posicao = document.getElementById('posicao').value;
-  const folegoAtual = parseInt(document.getElementById('folego-atual').value) || 10;
+  const folegoAtual = parseInt(document.getElementById('folego-atual').value) || 0;
   const folegoTotal = parseInt(document.getElementById('folego-total').value) || 10;
 
   const bonusA = getBonus(altura, bonusAltura);
   const bonusP = getBonus(peso, bonusPeso);
 
-  // Ajustar bônus de defesa para não goleiros
   function ajustarDefesa(bonus) {
     if (posicao !== 'goleiro') {
       if (bonus.defesa && (altura >= 1.86 || peso >= 86)) {
@@ -207,20 +208,17 @@ function calcularPericias() {
   const bonusAjustadoA = ajustarDefesa({...bonusA});
   const bonusAjustadoP = ajustarDefesa({...bonusP});
 
-  // Atualizar barra de fôlego
-  const porcentagemFolego = Math.min(100, (folegoAtual / folegoTotal) * 100);
-  document.getElementById('barra-folego').style.width = `${porcentagemFolego}%`;
+  atualizarBarraFolego();
   
-  // Verificar se aplica penalidade de fôlego
   let staminaPenalty = 1;
   let staminaClass = '';
   
-  if (folegoAtual <= 10 && folegoAtual > 0) {
-    staminaPenalty = 0.5;
-    staminaClass = 'low-stamina';
-  } else if (folegoAtual === 0) {
+  if (folegoAtual <= 0) {
     staminaPenalty = 0;
     staminaClass = 'no-stamina';
+  } else if (folegoAtual <= 10) {
+    staminaPenalty = 0.5;
+    staminaClass = 'low-stamina';
   }
 
   document.querySelectorAll('.pericia-item').forEach(item => {
@@ -234,14 +232,11 @@ function calcularPericias() {
     const atributoId = card.querySelector('.atributo-input').id;
     const valorAtributo = parseInt(document.getElementById(atributoId).value) || 0;
 
-    // Cálculo base (metade do atributo arredondado para baixo)
     let valor = Math.floor(valorAtributo / 2);
 
-    // Aplicar bônus de altura/peso
     if (bonusAjustadoA[periciaId]) valor += bonusAjustadoA[periciaId];
     if (bonusAjustadoP[periciaId]) valor += bonusAjustadoP[periciaId];
 
-    // Aplicar ambidestria
     if (perna === 'ambidestro') {
       if (['passe','drible','dominio','roubo'].includes(periciaId)) {
         valor += 5;
@@ -252,33 +247,30 @@ function calcularPericias() {
       }
     }
 
-    // Aplicar pontos manuais
     const pontosManuais = parseInt(item.querySelector('.pericia-manual').value) || 0;
     let valorTotal = valor + pontosManuais;
 
-    // Aplicar penalidade de fôlego
-    if (staminaPenalty !== 1) {
+    if (folegoAtual <= 0) {
+      valorTotal = 0;
+    } else if (staminaPenalty === 0.5) {
       valorTotal = Math.floor(valorTotal * staminaPenalty);
     }
 
     item.querySelector('.pericia-total').textContent = valorTotal;
   });
 
-  // Atualizar deslocamento (10 + velocidade inteira)
   const velocidade = parseInt(document.getElementById('velocidade').value) || 0;
   let deslocamentoFinal = 10 + velocidade;
   
-  // Aplicar penalidade de fôlego apenas ao deslocamento
-  if (staminaPenalty === 0.5) {
-    deslocamentoFinal = Math.floor(deslocamentoFinal * 0.5);
-  } else if (staminaPenalty === 0) {
+  if (folegoAtual <= 0) {
     deslocamentoFinal = 0;
+  } else if (staminaPenalty === 0.5) {
+    deslocamentoFinal = Math.floor(deslocamentoFinal * 0.5);
   }
   
   document.getElementById('deslocamento').value = deslocamentoFinal;
 }
 
-// Mostrar/ocultar campo SG
 function atualizarCamposPosicao() {
   const posicao = document.getElementById('posicao').value;
   const sgContainer = document.getElementById('sg-container');
@@ -290,7 +282,6 @@ function atualizarCamposPosicao() {
   }
 }
 
-// Upload de avatar
 document.getElementById('avatar-input').addEventListener('change', function(e) {
   const file = e.target.files[0];
   if (file) {
@@ -305,7 +296,6 @@ document.getElementById('avatar-input').addEventListener('change', function(e) {
   }
 });
 
-// Mostrar modal de escolha para ambidestro
 document.getElementById('perna').addEventListener('change', function() {
   if (this.value === 'ambidestro' && !escolhaAmbidestro) {
     document.getElementById('modal-ambidestro').style.display = 'flex';
@@ -314,35 +304,28 @@ document.getElementById('perna').addEventListener('change', function() {
   }
 });
 
-// Escolher opção para ambidestro
 function escolherAmbidestro(escolha) {
   escolhaAmbidestro = escolha;
   document.getElementById('modal-ambidestro').style.display = 'none';
   calcularPericias();
 }
 
-// Trocar seções
 function mostrarSecao(secao) {
-  // Esconder todas as seções
   document.querySelectorAll('.conteudo > div').forEach(el => {
     el.style.display = 'none';
   });
   
-  // Mostrar a seção selecionada
   document.getElementById(`secao-${secao}`).style.display = 'block';
   
-  // Atualizar menu ativo
   document.querySelectorAll('nav a').forEach(item => {
     item.classList.remove('ativo');
   });
   document.querySelector(`nav a[onclick="mostrarSecao('${secao}')"]`).classList.add('ativo');
   
-  // Carregar fichas se for o painel do mestre
   if (secao === 'mestre') {
     verificarAdmin();
   }
   
-  // Mostrar botão de exclusão se houver ficha carregada
   if (secao === 'ficha' && fichaId) {
     document.getElementById('btn-excluir').style.display = 'block';
   } else {
@@ -350,7 +333,30 @@ function mostrarSecao(secao) {
   }
 }
 
-// Verificar se usuário é admin
+async function verificarEMostrarMenuAdmin() {
+  const user = auth.currentUser;
+  const menuMestre = document.querySelector('nav a[onclick="mostrarSecao(\'mestre\')"]').parentElement;
+  
+  if (!user) {
+    menuMestre.style.display = 'none';
+    return;
+  }
+  
+  try {
+    const adminDoc = await db.collection('admins').doc(user.uid).get();
+    isAdmin = adminDoc.exists;
+    
+    if (isAdmin) {
+      menuMestre.style.display = 'list-item';
+    } else {
+      menuMestre.style.display = 'none';
+    }
+  } catch (error) {
+    console.error('Erro ao verificar admin para menu:', error);
+    menuMestre.style.display = 'none';
+  }
+}
+
 async function verificarAdmin() {
   const user = auth.currentUser;
   const adminMessage = document.getElementById('admin-message');
@@ -379,7 +385,6 @@ async function verificarAdmin() {
   }
 }
 
-// Salvar ficha no Firebase
 async function salvarFicha() {
   const user = auth.currentUser;
   if (!user) {
@@ -388,7 +393,6 @@ async function salvarFicha() {
     return;
   }
   
-  // Coletar dados da ficha
   const ficha = {
     nickname: document.getElementById('nickname').value || '',
     nome: document.getElementById('nome').value,
@@ -409,18 +413,15 @@ async function salvarFicha() {
     deslocamento: document.getElementById('deslocamento').value,
     time: document.getElementById('time').value,
     avatar: document.getElementById('avatar-img').src || '',
-    habilidades: document.getElementById('habilidades').value,
-    pericias: {},
-    userId: user.uid
+    habilidades: habilidades,
+    pericias: {}
   };
 
-  // Coletar atributos
   const atributos = ['potencia', 'tecnica', 'velocidade', 'agilidade', 'ego'];
   atributos.forEach(attr => {
     ficha[attr] = parseInt(document.getElementById(attr).value) || 0;
   });
 
-  // Coletar perícias (salvar manual e total)
   document.querySelectorAll('.pericia-item').forEach(item => {
     const periciaId = item.querySelector('.pericia-manual').dataset.pericia;
     const manual = parseInt(item.querySelector('.pericia-manual').value) || 0;
@@ -432,10 +433,14 @@ async function salvarFicha() {
     };
   });
   
-  // Salvar no Firestore
+  if (!fichaId) {
+    ficha.userId = user.uid;
+  }
+  
   try {
     if (fichaId) {
-      await db.collection('fichas').doc(fichaId).update(ficha);
+      const { userId, ...fichaSemUserId } = ficha;
+      await db.collection('fichas').doc(fichaId).update(fichaSemUserId);
       document.getElementById('btn-excluir').style.display = 'block';
     } else {
       const docRef = await db.collection('fichas').add(ficha);
@@ -443,16 +448,14 @@ async function salvarFicha() {
       document.getElementById('btn-excluir').style.display = 'block';
     }
     alert('Ficha salva com sucesso!');
-    carregarFichasDoUsuario(); // Atualizar lista de fichas
+    carregarFichasDoUsuario();
   } catch (error) {
     console.error('Erro ao salvar ficha:', error);
     alert('Erro ao salvar ficha: ' + error.message);
   }
 }
 
-// Criar nova ficha
 function criarNovaFicha() {
-  // Limpar o formulário
   document.getElementById('nickname').value = '';
   document.getElementById('nome').value = '';
   document.getElementById('idade').value = 18;
@@ -476,32 +479,32 @@ function criarNovaFicha() {
   document.getElementById('avatar-img').style.display = 'none';
   document.querySelector('.avatar span').style.display = 'block';
   
-  // Limpar atributos
   const atributos = ['potencia', 'tecnica', 'velocidade', 'agilidade', 'ego'];
   atributos.forEach(attr => {
     document.getElementById(attr).value = 0;
   });
   
-  // Limpar perícias
   document.querySelectorAll('.pericia-manual').forEach(input => {
     input.value = 0;
   });
   
-  // Limpar totais
   document.querySelectorAll('.pericia-total').forEach(span => {
     span.textContent = '0';
   });
   
-  fichaId = ''; // Nova ficha
+  fichaId = '';
   document.getElementById('btn-excluir').style.display = 'none';
   
-  // Atualizar cálculos
+  // Limpar habilidades
+  habilidades = [];
+  atualizarListaHabilidades();
+  atualizarContadorHabilidades();
+  
   atualizarBarraFolego();
   atualizarCamposPosicao();
   calcularPericias();
 }
 
-// Carregar ficha selecionada
 async function carregarFichaSelecionada() {
   const seletor = document.getElementById('fichas-usuario');
   const id = seletor.value;
@@ -521,7 +524,6 @@ async function carregarFichaSelecionada() {
   }
 }
 
-// Preencher formulário com dados da ficha
 function preencherFormulario(ficha) {
   document.getElementById('nickname').value = ficha.nickname || '';
   document.getElementById('nome').value = ficha.nome || '';
@@ -541,9 +543,12 @@ function preencherFormulario(ficha) {
   document.getElementById('sg').value = ficha.sg || 0;
   document.getElementById('deslocamento').value = ficha.deslocamento || 10;
   document.getElementById('time').value = ficha.time || '';
-  document.getElementById('habilidades').value = ficha.habilidades || '';
   
-  // Avatar
+  // Carregar habilidades
+  habilidades = ficha.habilidades || [];
+  atualizarListaHabilidades();
+  atualizarContadorHabilidades();
+  
   if (ficha.avatar) {
     const img = document.getElementById('avatar-img');
     img.src = ficha.avatar;
@@ -554,13 +559,11 @@ function preencherFormulario(ficha) {
     document.querySelector('.avatar span').style.display = 'block';
   }
   
-  // Atributos
   const atributos = ['potencia', 'tecnica', 'velocidade', 'agilidade', 'ego'];
   atributos.forEach(attr => {
     document.getElementById(attr).value = ficha[attr] || 0;
   });
   
-  // Perícias
   for (const [periciaId, valores] of Object.entries(ficha.pericias || {})) {
     const manualInput = document.querySelector(`.pericia-manual[data-pericia="${periciaId}"]`);
     const totalSpan = document.querySelector(`.pericia-total[data-pericia="${periciaId}"]`);
@@ -569,13 +572,11 @@ function preencherFormulario(ficha) {
     if (totalSpan) totalSpan.textContent = valores.total;
   }
   
-  // Atualizar campos dependentes
   atualizarCamposPosicao();
   atualizarBarraFolego();
   calcularPericias();
 }
 
-// Carregar fichas do usuário para o seletor
 async function carregarFichasDoUsuario() {
   const user = auth.currentUser;
   if (!user) return;
@@ -610,16 +611,13 @@ async function carregarFichasDoUsuario() {
       seletor.appendChild(option);
     });
     
-    // Se já tivermos um fichaId (por exemplo acabamos de salvar), seleciona ela
     if (fichaId) {
       seletor.value = fichaId;
       carregarFichaSelecionada();
       return;
     }
     
-    // Caso o usuário ainda não tenha fichaId carregada, auto-carrega a última ficha (mais recente)
     if (seletor.options.length > 0) {
-      // selecionar a última opção adicionada (geralmente a mais recente)
       seletor.value = seletor.options[seletor.options.length - 1].value;
       carregarFichaSelecionada();
     }
@@ -628,7 +626,6 @@ async function carregarFichasDoUsuario() {
   }
 }
 
-// Carregar fichas para o painel do mestre
 async function carregarFichasParaMestre() {
   try {
     const snapshot = await db.collection('fichas').get();
@@ -640,11 +637,18 @@ async function carregarFichasParaMestre() {
       return;
     }
     
+    fichasUsuario = [];
+    
     snapshot.forEach(doc => {
       const ficha = doc.data();
       const fichaEl = document.createElement('div');
       fichaEl.className = 'ficha-item';
       fichaEl.setAttribute('data-id', doc.id);
+      
+      fichasUsuario.push({
+        id: doc.id,
+        ...ficha
+      });
       
       fichaEl.innerHTML = `
         <div class="ficha-avatar">
@@ -656,6 +660,7 @@ async function carregarFichasParaMestre() {
           <p><strong>Time:</strong> ${mapaTimes[ficha.time] || '-'} | <strong>Posição:</strong> ${mapaPosicoes[ficha.posicao] || '-'}</p>
           <p><i class="fas fa-futbol"></i> ${ficha.gols || 0} Gols | 
              <i class="fas fa-shoe-prints"></i> ${ficha.assistencias || 0} Assistências</p>
+          <p><strong>Proprietário:</strong> ${ficha.userId || 'Não especificado'}</p>
         </div>
         <button class="btn" onclick="editarFicha('${doc.id}')">
           <i class="fas fa-edit"></i> Editar
@@ -672,19 +677,16 @@ async function carregarFichasParaMestre() {
   }
 }
 
-// Editar ficha (acessível pelo mestre)
 function editarFicha(id) {
   mostrarSecao('ficha');
   
-  // Encontrar a ficha pelo ID
   const ficha = fichasUsuario.find(f => f.id === id);
   if (ficha) {
-  preencherFormulario(ficha);
+    preencherFormulario(ficha);
     fichaId = id;
     return;
   }
   
-  // Se não encontrou no cache, carregar do banco
   db.collection('fichas').doc(id).get().then(doc => {
     if (doc.exists) {
       preencherFormulario(doc.data());
@@ -693,7 +695,6 @@ function editarFicha(id) {
   });
 }
 
-// Função para excluir ficha (usuário)
 function excluirFicha() {
   if (!fichaId) return;
   
@@ -702,14 +703,12 @@ function excluirFicha() {
   document.getElementById('modal-excluir').style.display = 'flex';
 }
 
-// Função para excluir ficha (admin)
 function excluirFichaAdmin(id) {
   fichaParaExcluir = id;
   document.getElementById('excluir-mensagem').textContent = `Tem certeza que deseja excluir esta ficha permanentemente?`;
   document.getElementById('modal-excluir').style.display = 'flex';
 }
 
-// Confirmar exclusão de ficha
 async function confirmarExclusao() {
   const id = fichaParaExcluir || fichaId;
   
@@ -722,11 +721,9 @@ async function confirmarExclusao() {
     await db.collection('fichas').doc(id).delete();
     
     if (fichaParaExcluir) {
-      // Atualizar lista de fichas no painel do mestre
       carregarFichasParaMestre();
       alert('Ficha excluída com sucesso!');
     } else {
-      // Limpar formulário и recarregar fichas
       criarNovaFicha();
       carregarFichasDoUsuario();
       alert('Sua ficha foi excluída com sucesso!');
@@ -740,18 +737,15 @@ async function confirmarExclusao() {
   fichaParaExcluir = null;
 }
 
-// Fechar modal de exclusão
 function fecharExclusao() {
   document.getElementById('modal-excluir').style.display = 'none';
   fichaParaExcluir = null;
 }
 
-// Fechar modal de ficha
 function fecharModalFicha() {
   document.getElementById('modal-ficha').style.display = 'none';
 }
 
-// Funções de login
 function abrirLogin() {
   document.getElementById('modal-login').style.display = 'flex';
 }
@@ -766,7 +760,6 @@ async function fazerLoginGoogle() {
     const result = await auth.signInWithPopup(provider);
     const user = result.user;
     
-    // Atualizar avatar do usuário
     const userAvatar = document.getElementById('user-avatar');
     if (user.photoURL) {
       userAvatar.innerHTML = `<img src="${user.photoURL}" alt="${user.displayName}">`;
@@ -785,13 +778,157 @@ function login() {
   abrirLogin();
 }
 
-// Logout
 function logout() {
   auth.signOut();
   window.location.reload();
 }
 
-// Atualizar menu de login/logout conforme o estado
+// Funções para o sistema de habilidades
+function adicionarNovaHabilidade() {
+  if (habilidades.length >= 15) {
+    alert('Limite máximo de 15 habilidades atingido!');
+    return;
+  }
+  
+  document.getElementById('form-nova-habilidade').style.display = 'block';
+  document.getElementById('btn-add-habilidade').style.display = 'none';
+  limparFormularioHabilidade();
+  editandoHabilidadeIndex = -1;
+}
+
+function cancelarHabilidade() {
+  document.getElementById('form-nova-habilidade').style.display = 'none';
+  document.getElementById('btn-add-habilidade').style.display = 'block';
+  limparFormularioHabilidade();
+  editandoHabilidadeIndex = -1;
+}
+
+function limparFormularioHabilidade() {
+  document.getElementById('nome-habilidade-input').value = '';
+  document.querySelector('input[name="tipo-habilidade"][value="passiva"]').checked = true;
+  document.getElementById('custo-habilidade-input').value = '1';
+  document.getElementById('custo-container').style.display = 'none';
+  document.getElementById('descricao-habilidade-input').value = '';
+}
+
+function toggleCustoHabilidade() {
+  const tipoAtiva = document.querySelector('input[name="tipo-habilidade"][value="ativa"]').checked;
+  document.getElementById('custo-container').style.display = tipoAtiva ? 'block' : 'none';
+}
+
+function salvarHabilidade() {
+  const nome = document.getElementById('nome-habilidade-input').value.trim();
+  const tipo = document.querySelector('input[name="tipo-habilidade"]:checked').value;
+  const custo = tipo === 'ativa' ? parseInt(document.getElementById('custo-habilidade-input').value) || 1 : 0;
+  const descricao = document.getElementById('descricao-habilidade-input').value.trim();
+  
+  if (!nome) {
+    alert('Por favor, informe o nome da habilidade!');
+    return;
+  }
+  
+  if (!descricao) {
+    alert('Por favor, informe a descrição da habilidade!');
+    return;
+  }
+  
+  const novaHabilidade = {
+    nome,
+    tipo,
+    custo,
+    descricao,
+    expandida: false
+  };
+  
+  if (editandoHabilidadeIndex >= 0) {
+    // Editando habilidade existente
+    habilidades[editandoHabilidadeIndex] = novaHabilidade;
+  } else {
+    // Adicionando nova habilidade
+    habilidades.push(novaHabilidade);
+  }
+  
+  atualizarListaHabilidades();
+  atualizarContadorHabilidades();
+  cancelarHabilidade();
+}
+
+function editarHabilidade(index) {
+  const habilidade = habilidades[index];
+  
+  document.getElementById('nome-habilidade-input').value = habilidade.nome;
+  document.querySelector(`input[name="tipo-habilidade"][value="${habilidade.tipo}"]`).checked = true;
+  document.getElementById('custo-habilidade-input').value = habilidade.custo;
+  document.getElementById('custo-container').style.display = habilidade.tipo === 'ativa' ? 'block' : 'none';
+  document.getElementById('descricao-habilidade-input').value = habilidade.descricao;
+  
+  document.getElementById('form-nova-habilidade').style.display = 'block';
+  document.getElementById('btn-add-habilidade').style.display = 'none';
+  editandoHabilidadeIndex = index;
+}
+
+function excluirHabilidade(index) {
+  if (confirm('Tem certeza que deseja excluir esta habilidade?')) {
+    habilidades.splice(index, 1);
+    atualizarListaHabilidades();
+    atualizarContadorHabilidades();
+  }
+}
+
+function toggleExpandirHabilidade(index) {
+  habilidades[index].expandida = !habilidades[index].expandida;
+  atualizarListaHabilidades();
+}
+
+function atualizarListaHabilidades() {
+  const listaHabilidades = document.getElementById('lista-habilidades');
+  listaHabilidades.innerHTML = '';
+  
+  if (habilidades.length === 0) {
+    listaHabilidades.innerHTML = '<p class="sem-habilidades">Nenhuma habilidade adicionada ainda.</p>';
+    return;
+  }
+  
+  habilidades.forEach((habilidade, index) => {
+    const habilidadeEl = document.createElement('div');
+    habilidadeEl.className = `habilidade-item ${habilidade.tipo}`;
+    
+    const tipoTexto = habilidade.tipo === 'ativa' ? `(ATIVA - ${habilidade.custo} Fôlego)` : '(PASSIVA)';
+    
+    habilidadeEl.innerHTML = `
+      <div class="habilidade-cabecalho" onclick="toggleExpandirHabilidade(${index})">
+        <div class="habilidade-titulo">
+          <h4>${habilidade.nome}</h4>
+          <span class="habilidade-tipo">${tipoTexto}</span>
+        </div>
+        <div class="habilidade-controles">
+          <button class="btn-icon" onclick="event.stopPropagation(); editarHabilidade(${index})">
+            <i class="fas fa-edit"></i>
+          </button>
+          <button class="btn-icon btn-delete" onclick="event.stopPropagation(); excluirHabilidade(${index})">
+            <i class="fas fa-trash"></i>
+          </button>
+          <i class="fas fa-chevron-${habilidade.expandida ? 'up' : 'down'}"></i>
+        </div>
+      </div>
+      <div class="habilidade-descricao" style="display: ${habilidade.expandida ? 'block' : 'none'}">
+        <p>${habilidade.descricao}</p>
+      </div>
+    `;
+    
+    listaHabilidades.appendChild(habilidadeEl);
+  });
+}
+
+function atualizarContadorHabilidades() {
+  const contador = document.getElementById('habilidades-contador');
+  contador.textContent = `${habilidades.length}/15 habilidades`;
+  
+  // Mostrar/esconder botão de adicionar baseado no limite
+  document.getElementById('btn-add-habilidade').style.display = 
+    habilidades.length < 15 ? 'block' : 'none';
+}
+
 auth.onAuthStateChanged(user => {
   const menuLogin = document.getElementById('menu-login');
   const userAvatar = document.getElementById('user-avatar');
@@ -800,7 +937,6 @@ auth.onAuthStateChanged(user => {
     menuLogin.innerHTML = '<i class="fas fa-sign-out-alt"></i> Sair';
     menuLogin.onclick = logout;
     
-    // Atualizar avatar do usuário
     if (user.photoURL) {
       userAvatar.innerHTML = `<img src="${user.photoURL}" alt="${user.displayName}">`;
     } else {
@@ -808,9 +944,9 @@ auth.onAuthStateChanged(user => {
     }
     userAvatar.style.display = 'flex';
     
-    carregarFichasDoUsuario(); // Carregar fichas do usuário
+    carregarFichasDoUsuario();
+    verificarEMostrarMenuAdmin();
     
-    // Verificar se é admin
     db.collection('admins').doc(user.uid).get().then(doc => {
       isAdmin = doc.exists;
     });
@@ -820,48 +956,50 @@ auth.onAuthStateChanged(user => {
     userAvatar.style.display = 'none';
     document.getElementById('seletor-fichas').style.display = 'none';
     document.getElementById('btn-excluir').style.display = 'none';
+    
+    const menuMestre = document.querySelector('nav a[onclick="mostrarSecao(\'mestre\')"]').parentElement;
+    menuMestre.style.display = 'none';
   }
 });
 
-// Inicialização
 document.addEventListener('DOMContentLoaded', function() {
-  // Inicializar loader com timeout de segurança
   setTimeout(() => {
     document.getElementById('loader').style.display = 'none';
   }, 3000);
   
-  // Verificar se as imagens carregaram
   verificarImagens();
   
-  // Inicializar Firebase Auth
   auth.onAuthStateChanged(user => {
     if (user) {
       carregarFichasDoUsuario();
+      verificarEMostrarMenuAdmin();
     }
   });
   
-  // Inicializar componentes
   atualizarBarraFolego();
   atualizarCamposPosicao();
   calcularPericias();
   
-  // Event listeners
   const campos = ['altura', 'peso', 'perna', 'folego-atual', 'folego-total', 'posicao', 'posicao_secundaria'];
   campos.forEach(id => {
-    document.getElementById(id).addEventListener('change', calcularPericias);
+    const element = document.getElementById(id);
+    if (element) {
+      element.addEventListener('change', calcularPericias);
+    }
   });
   
-  // Event listeners para atributos e perícias
   const atributos = ['potencia', 'tecnica', 'velocidade', 'agilidade', 'ego'];
   atributos.forEach(attr => {
-    document.getElementById(attr).addEventListener('input', calcularPericias);
+    const element = document.getElementById(attr);
+    if (element) {
+      element.addEventListener('input', calcularPericias);
+    }
   });
   
   document.querySelectorAll('.pericia-manual').forEach(input => {
     input.addEventListener('input', calcularPericias);
   });
 
-  // Evento para upload de avatar
   document.getElementById('avatar-input').addEventListener('change', function(e) {
     const file = e.target.files[0];
     if (file) {
@@ -874,5 +1012,20 @@ document.addEventListener('DOMContentLoaded', function() {
       };
       reader.readAsDataURL(file);
     }
+  });
+
+  document.getElementById('folego-atual').addEventListener('input', function() {
+    atualizarBarraFolego();
+    calcularPericias();
+  });
+
+  document.getElementById('folego-total').addEventListener('input', function() {
+    atualizarBarraFolego();
+    calcularPericias();
+  });
+  
+  // Event listeners para o sistema de habilidades
+  document.querySelectorAll('input[name="tipo-habilidade"]').forEach(radio => {
+    radio.addEventListener('change', toggleCustoHabilidade);
   });
 });
