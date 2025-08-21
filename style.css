@@ -779,3 +779,215 @@ input:focus, select:focus, textarea:focus {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+/* Estilos para o sistema de habilidades */
+.habilidades-container {
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 10px;
+  padding: 20px;
+  margin-top: 30px;
+  border: 1px solid #00ff00;
+}
+
+.habilidades-contador {
+  text-align: center;
+  color: #00ff00;
+  margin-bottom: 15px;
+  font-size: 1.1rem;
+}
+
+.btn-add-habilidade {
+  background: linear-gradient(135deg, #00cc00, #009900);
+  border: none;
+  margin: 0 auto;
+  display: block;
+}
+
+.btn-add-habilidade:hover {
+  background: linear-gradient(135deg, #00ee00, #00bb00);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 255, 0, 0.4);
+}
+
+.form-habilidade {
+  background: rgba(0, 30, 0, 0.8);
+  border-radius: 8px;
+  padding: 20px;
+  margin: 20px 0;
+  border: 1px solid #00cc00;
+}
+
+.form-habilidade h3 {
+  color: #00ff00;
+  margin-top: 0;
+  border-bottom: 1px solid #00cc00;
+  padding-bottom: 10px;
+}
+
+.form-habilidade-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+@media (max-width: 768px) {
+  .form-habilidade-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.form-habilidade-item label {
+  display: block;
+  margin-bottom: 5px;
+  color: #00ff00;
+  font-weight: bold;
+}
+
+.form-habilidade-item input,
+.form-habilidade-item textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #00cc00;
+  border-radius: 5px;
+  background: rgba(0, 20, 0, 0.8);
+  color: white;
+  font-family: 'Roboto', sans-serif;
+}
+
+.form-habilidade-item textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.tipo-options {
+  display: flex;
+  gap: 15px;
+}
+
+.radio-option {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.radio-option input {
+  width: auto;
+}
+
+.radio-option span {
+  color: white;
+}
+
+.form-habilidade-botoes {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 15px;
+}
+
+.btn-cancelar {
+  background: #666;
+}
+
+.btn-cancelar:hover {
+  background: #888;
+}
+
+.lista-habilidades {
+  margin-top: 20px;
+}
+
+.sem-habilidades {
+  text-align: center;
+  color: #888;
+  font-style: italic;
+  padding: 20px;
+}
+
+.habilidade-item {
+  background: rgba(0, 20, 0, 0.8);
+  border-radius: 8px;
+  margin-bottom: 10px;
+  overflow: hidden;
+  border-left: 4px solid #00cc00;
+}
+
+.habilidade-item.ativa {
+  border-left-color: #ff9900;
+}
+
+.habilidade-cabecalho {
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.habilidade-cabecalho:hover {
+  background: rgba(0, 40, 0, 0.8);
+}
+
+.habilidade-titulo {
+  flex: 1;
+}
+
+.habilidade-titulo h4 {
+  margin: 0;
+  color: #00ff00;
+  font-size: 1.2rem;
+}
+
+.habilidade-item.ativa .habilidade-titulo h4 {
+  color: #ffcc00;
+}
+
+.habilidade-tipo {
+  color: #aaa;
+  font-size: 0.9rem;
+}
+
+.habilidade-controles {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-icon {
+  background: transparent;
+  border: none;
+  color: #00cc00;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 5px;
+  border-radius: 4px;
+  transition: all 0.3s;
+}
+
+.btn-icon:hover {
+  background: rgba(0, 100, 0, 0.5);
+  color: #00ff00;
+}
+
+.btn-icon.btn-delete {
+  color: #ff6666;
+}
+
+.btn-icon.btn-delete:hover {
+  background: rgba(100, 0, 0, 0.5);
+  color: #ff0000;
+}
+
+.habilidade-descricao {
+  padding: 0 15px 15px 15px;
+  border-top: 1px solid #004400;
+  margin-top: 10px;
+}
+
+.habilidade-descricao p {
+  margin: 0;
+  color: #ccc;
+  line-height: 1.5;
+}
