@@ -307,11 +307,8 @@ function mostrarSecao(secao) {
   });
   document.querySelector(`nav a[onclick="mostrarSecao('${secao}')"]`).classList.add('ativo');
   
-  if (secao === 'ranking') {
-    // Inicializar o ranking quando a aba for aberta
-    if (typeof inicializarRanking === 'function') {
-      inicializarRanking();
-    }
+  if (secao === 'mestre') {
+    verificarAdmin();
   }
   
   if (secao === 'ficha' && fichaId) {
