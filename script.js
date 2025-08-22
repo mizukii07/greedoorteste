@@ -313,7 +313,6 @@ function mostrarSecao(secao) {
       inicializarRanking();
     }
   }
-}
   
   if (secao === 'ficha' && fichaId) {
     document.getElementById('btn-excluir').style.display = 'block';
