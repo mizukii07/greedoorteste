@@ -489,13 +489,49 @@
     </div>
     
     <div id="secao-ranking" style="display: none;">
-      <div class="ficha-container">
-        <div class="em-breve">
-          <h1>RANKING</h1>
-          <p>EM BREVE</p>
-        </div>
+  <div class="ranking-container">
+    <div class="ranking-header">
+      <h1><i class="fas fa-trophy"></i> RANKING GREEN DOOR</h1>
+      <div class="mensagem-destaque">
+        <p>🔥 Parabéns aos jogadores em destaque desta rodada! Continuem evoluindo e buscando o topo do Green Door RPG! ⚽🔥</p>
       </div>
     </div>
+
+    <div class="ranking-controls">
+      <div class="filtros">
+        <select id="filtro-posicao">
+          <option value="todas">Todas as Posições</option>
+          <option value="goleiro">Goleiros</option>
+          <option value="zagueiro">Zagueiros</option>
+          <option value="lateral">Laterais</option>
+          <option value="meia">Meias</option>
+          <option value="atacante">Atacantes</option>
+        </select>
+        
+        <select id="filtro-ordenacao">
+          <option value="gols">Ordenar por Gols</option>
+          <option value="assistencias">Ordenar por Assistências</option>
+          <option value="sg">Ordenar por SG (Defensores)</option>
+          <option value="pontuacao">Ordenar por Pontuação</option>
+        </select>
+      </div>
+      
+      <div class="destaque-control">
+        <button class="btn-destaque" onclick="selecionarDestaques()">
+          <i class="fas fa-star"></i> Selecionar Destaques
+        </button>
+      </div>
+    </div>
+
+    <div id="ranking-list" class="ranking-list">
+      <!-- O ranking será carregado aqui via JavaScript -->
+      <div class="carregando-ranking">
+        <i class="fas fa-spinner fa-spin"></i>
+        <p>Carregando ranking...</p>
+      </div>
+    </div>
+  </div>
+</div>
     
     <div id="secao-leilao" style="display: none;">
       <div class="ficha-container">
